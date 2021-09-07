@@ -1,4 +1,4 @@
-# Plastic in body and cell size of Drosophila Genetic Reference Panel (DGRP) lines
+# Plastic responses in body and cell size of Drosophila Genetic Reference Panel (DGRP) lines
  
 This repository contains code and data needed to reproduce the manuscript: Leiva FP, Boerrigter JGJ, Verberk WCEP. Phenotypic plasticity of body size and cell size to oxygen and temperature in Drosophila melanogaster. 
 
