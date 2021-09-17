@@ -20,13 +20,6 @@ getwd()
 #Libraries
 library(dplyr)
 library(xlsx)
-# library(ggplot2)
-# library(nlme)
-# library(car)
-# library(lmerTest)# P-values for mixed models
-# library(visreg)# plotting regression models
-# library(AICcmodavg)
-# library(cowplot)
 # ------------------------------------------------------------------------------
 # load data
 dat<-read.xlsx("body size related traits 20191122.xlsx",sheetName = "data")
@@ -42,20 +35,39 @@ dat$sex<-as.factor(dat$sex)
 dat$left_or_rigth<-as.factor(dat$left_or_rigth)
 dat$temperature<-as.numeric(dat$temperature)
 dat$oxygen<-as.numeric(dat$oxygen)
-dat$left_or_rigth<-as.factor(dat$left_or_rigth)
 # ------------------------------------------------------------------------------
-# count number of observations per treatment
-xtabs(formula = ~ temperature + oxygen + sex, data = f25180)
-xtabs(formula = ~ temperature + oxygen, data = f25182)
-xtabs(formula = ~ temperature + oxygen, data = f25203)
-xtabs(formula = ~ temperature + oxygen, data = f28141)
-xtabs(formula = ~ temperature + oxygen, data = f28196)
-xtabs(formula = ~ temperature + oxygen, data = f28247)
+# create a new column to identify individual flies
+dat$ID_fly<-as.factor(paste(dat$plate,dat$well,sep = "-"))
 # ------------------------------------------------------------------------------
+#Exclude NAs and calculate cell area and cell number for each data frame
+dat=filter(dat,trichomes_number>0)
+names(dat)
+dat$cell_area<-dat$counting_area/dat$trichomes_number
+dat$cell_number<-dat$wing_area/dat$cell_area
+dat$cell_area_log<-log10(dat$cell_area)
+dat$cell_number_log<-log10(dat$cell_number)
+dat$wing_area_log<-log10(dat$wing_area)
+dat$fresh_mass_log<-log10(dat$fresh_mass)
+
+#select columns of interest
+names(dat)
+dat<-dat[,c(2:4,7,8,14,18:24)]
+
 # filter by sex
 female=filter(dat,sex!="male")
 male=filter(dat,sex=="male")
 # ------------------------------------------------------------------------------
+# count number of observations per treatment
+xtabs(formula = ~ temperature + oxygen + stock, data = female)
+xtabs(formula = ~ temperature + oxygen + stock, data = male)
+# ------------------------------------------------------------------------------
+#add  missing treatment (25°C and 21 kPa) for females of the stock "28247" from:
+
+# Leiva FP, Santos M, Rezende E, & Verberk WCEP. (2021). Draft version of paper
+# data and code of manuscript: Intraspecific variation on heat tolerance in a
+# model ectotherm: effects of body mass, cell size, oxygen and sex (2.0).
+# Zenodo. https://doi.org/10.5281/zenodo.5244364
+
 # subset of females by stock
 f25180<-subset(dat,dat$stock=="25180" & dat$sex=="female")
 f25182<-subset(dat,dat$stock=="25182" & dat$sex=="female")
@@ -64,13 +76,12 @@ f28141<-subset(dat,dat$stock=="28141" & dat$sex=="female")
 f28196<-subset(dat,dat$stock=="28196" & dat$sex=="female")
 f28247<-subset(dat,dat$stock=="28247" & dat$sex=="female")
 
-
-#add  missing treatment (25°C and 21 kPa) from: 
-
-# Leiva FP, Santos M, Rezende E, & Verberk WCEP. (2021). Draft version of paper
-# data and code of manuscript: Intraspecific variation on heat tolerance in a
-# model ectotherm: effects of body mass, cell size, oxygen and sex (2.0).
-# Zenodo. https://doi.org/10.5281/zenodo.5244364
+m25180<-subset(dat,dat$stock=="25180" & dat$sex=="male")
+m25182<-subset(dat,dat$stock=="25182" & dat$sex=="male")
+m25203<-subset(dat,dat$stock=="25203" & dat$sex=="male")
+m28141<-subset(dat,dat$stock=="28141" & dat$sex=="male")
+m28196<-subset(dat,dat$stock=="28196" & dat$sex=="male")
+m28247<-subset(dat,dat$stock=="28247" & dat$sex=="male")
 
 new<-data.frame("28247","25","21","female","new_fly",
                 "1.465","1051254.1","162.5482","6457.345",
@@ -97,16 +108,9 @@ new$wing_area_log<-as.numeric(new$wing_area_log)
 new$cell_area_log<-as.numeric(new$cell_area_log)
 new$cell_number_log<-as.numeric(new$cell_number_log)
 
-#merge two dataframes
+#merge data frames
 f28247<-rbind(f28247,new)
 
-# subset of males by stock
-m25180<-subset(dat,dat$stock=="25180" & dat$sex=="male")
-m25182<-subset(dat,dat$stock=="25182" & dat$sex=="male")
-m25203<-subset(dat,dat$stock=="25203" & dat$sex=="male")
-m28141<-subset(dat,dat$stock=="28141" & dat$sex=="male")
-m28196<-subset(dat,dat$stock=="28196" & dat$sex=="male")
-m28247<-subset(dat,dat$stock=="28247" & dat$sex=="male")
 # ------------------------------------------------------------------------------
 # calculate the median of cell area for females and males reared under "control"
 # conditions, i.e. 25°C and 21 kPa
@@ -127,7 +131,7 @@ m28141.med<-aggregate(cell_area~stock, data = subset(m28141,m28141$temperature==
 m28196.med<-aggregate(cell_area~stock, data = subset(m28196,m28196$temperature==25 & oxygen==21),median)
 m28247.med<-aggregate(cell_area~stock, data = subset(m28247,m28247$temperature==25 & oxygen==21),median)
 # ------------------------------------------------------------------------------
-# Calculate percentage of change in cell area relative to the control (25°C and
+# Calculate percentage of change (cell_area_delta) in cell area relative to the control (25°C and
 # 21 kPa)
 
 # females
@@ -151,7 +155,8 @@ male2<-rbind(m25180,m25182,m25203,m28141,m28196,m28247)
 female2<-rbind(f25180,f25182,f25203,f28141,f28196,f28247)
 dat2<-rbind(male2,female2)
 # ------------------------------------------------------------------------------
-# calculate the median of fresh mass per stock for males and females under "control" conditions, i.e. 25°C and 21 kPa
+# calculate the median of fresh mass per stock for males and females under
+# "control" conditions, i.e. 25°C and 21 kPa
 
 # males
 m25180.med<-aggregate(fresh_mass~stock, data = subset(m25180,m25180$temperature==25 & oxygen==21),median)
@@ -212,7 +217,7 @@ f28141.med<-aggregate(wing_area~stock, data = subset(f28141,f28141$temperature==
 f28196.med<-aggregate(wing_area~stock, data = subset(f28196,f28196$temperature==25 & oxygen==21),median)
 f28247.med<-aggregate(wing_area~stock, data = subset(f28247,f28247$temperature==25 & oxygen==21),median)
 
-# Calculating the change in fresh mass relative to the control (25°C and 21 kPa)
+# Calculating the change in wing area relative to the control (25°C and 21 kPa)
 # at the initial of the experiment for each one of the lines, at each generation
 
 # females
@@ -235,412 +240,13 @@ m28247$wing_area_delta<-((m28247$wing_area/m28247.med[1,2])-1)*100
 male2<-rbind(m25180,m25182,m25203,m28141,m28196,m28247)
 female2<-rbind(f25180,f25182,f25203,f28141,f28196,f28247)
 dat2<-rbind(male2,female2)
-################################################################################
-#Question 1:  Does developing temperature affect body size-related traits in D.
-#melanogaster? 
-################################################################################
-# body mass in females
-f1<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=female2)
-summary(f1);AIC(f1);logLik(f1);Anova(f1)
 
-# wing area in females
-f2<-lmer(wing_area_delta~temperature + (1|stock),REML = FALSE, data=female2)
-summary(f2);AIC(f2);logLik(f2);Anova(f2)
-
-# cell area in females
-f3<-lmer(cell_area_delta~temperature + (1|stock),REML = FALSE, data=female2)
-summary(f3);AIC(f3);logLik(f3);Anova(f3)
-
-# body mass in males
-m1<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=male2)
-summary(m1);AIC(m1);logLik(m1);Anova(m1)
-
-# wing area in males
-m2<-lmer(wing_area_delta~temperature + (1|stock),REML = FALSE, data=male2)
-summary(m2);AIC(m2);logLik(m2);Anova(m2)
-
-# cell area in males
-m3<-lmer(cell_area_delta~temperature + (1|stock),REML = FALSE, data=male2)
-summary(m3);AIC(m3);logLik(m3);Anova(m3)
-
-# body mass in sex pooled
-p1<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=dat2)
-summary(p1);AIC(p1);logLik(p1);Anova(p1)
-
-# wing area in sex pooled
-p2<-lmer(wing_area_delta~temperature + (1|stock),REML = FALSE, data=dat2)
-summary(p2);AIC(p2);logLik(p2);Anova(p2)
-
-# cell area in sex pooled
-p3<-lmer(cell_area_delta~temperature + (1|stock),REML = FALSE, data=dat2)
-summary(p3);AIC(p3);logLik(p3);Anova(p3)
-
-################################################################################
-#Question 2: Does developing oxygen affect body size -related traits in D.
-#melanogaster?
-################################################################################
-
-# body mass in females
-f4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f4);AIC(f4);logLik(f4);Anova(f4)
-
-# wing area in females
-f5<-lmer(wing_area_delta~oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f5);AIC(f5);logLik(f5);Anova(f5)
-
-# cell area in females
-f6<-lmer(cell_area_delta~oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f6);AIC(f6);logLik(f6);Anova(f6)
-
-# fresh mass in males
-m4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m4);AIC(m4);logLik(m4);Anova(m4)
-
-# wing area in males
-m5<-lmer(wing_area_delta~oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m5);AIC(m5);logLik(m5);Anova(m5)
-
-# cell area in males
-m6<-lmer(cell_area_delta~oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m6);AIC(m6);logLik(m6);Anova(m6)
-
-# body mass in sex pooled
-p4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p4);AIC(p4);logLik(p4);Anova(p4)
-
-# wing area in sex pooled
-p5<-lmer(wing_area_delta~oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p5);AIC(p5);logLik(p5);Anova(p5)
-
-# cell area in sex pooled
-p6<-lmer(cell_area_delta~oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p6);AIC(p6);logLik(p6);Anova(p6)
-
-################################################################################
-#Question 3: Does developing temperature AND oxygen affect body size -related
-#traits in D. melanogaster?
-################################################################################
-
-# body mass in females
-f7<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f7);AIC(f7);logLik(f7);Anova(f7)
-
-# wing area in females
-f8<-lmer(wing_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f8);AIC(f8);logLik(f8);Anova(f8)
-
-# cell area in females
-f9<-lmer(cell_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=female2)
-summary(f9);AIC(f9);logLik(f9);Anova(f9)
-
-# body mass in males
-m7<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m7);AIC(m7);logLik(m7);Anova(m7)
-
-# wing area in males
-m8<-lmer(wing_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m8);AIC(m8);logLik(m8);Anova(m8)
-
-# cell area in males
-m9<-lmer(cell_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=male2)
-summary(m9);AIC(m9);logLik(m9);Anova(m9)
-
-# body mass in sex pooled
-p7<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p7);AIC(p7);logLik(p7);Anova(p7)
-
-# wing area in sex pooled
-p8<-lmer(wing_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p8);AIC(p8);logLik(p8);Anova(p8)
-
-# cell area in sex pooled
-p9<-lmer(cell_area_delta~temperature*oxygen + (1|stock),REML = FALSE, data=dat2)
-summary(p9);AIC(p9);logLik(p9);Anova(p9)
-
-################################################################################
-# Figure 3 
-################################################################################
-#Figure based on the most informative model for each response variable. The model
-#structure consider temperature and oxygen interaction.
-{
-#pdf("Figure 3.pdf",width = 12,height = 12,useDingbats = FALSE)
-png("Figure 3.png",width = 12,height = 12,units = "in",res = 300)
-par(mfrow=c(3,3),tcl=-0.4, family="serif",omi=c(0,0,0,0))
-
-par(mai=c(0.6,0.6,0.5,0.2))
-visreg(p7, 'temperature', by='stock', cond=list(oxygen=10),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=5,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Temperature (°C)", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(16,26),
-       cex.axis=1.6,cex.lab=2,
-       main="Does developing temperature affect body size-\nrelated traits in D. melanogaster?",
-       cex.main=1.5)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.5,0.2))
-visreg(p7,'oxygen', by='stock', cond=list(temperature=25),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Oxygen (kPa)", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2,
-       main="Does developing oxygen affect body size-\nrelated traits in D. melanogaster?",
-       cex.main=1.5)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.5,0))
-visreg(p7,'oxygen', by='temperature',re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2,
-       main="Does developing temperature and oxygen affect\nbody size-related traits in D. melanogaster?",
-       cex.main=1.5)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0.2))
-visreg(p8, 'temperature', by='stock', cond=list(oxygen=10),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Temperature (°C)", ylab="Change in wing area (%)",
-       ylim=c(-50,50),xlim=c(16,26),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0.2))
-visreg(p8,'oxygen', by='stock', cond=list(temperature=25),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Oxygen (kPa)", ylab="Change in wing area (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0))
-visreg(p8,'oxygen', by='temperature',re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Change in wing area (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0.2))
-visreg(p9, 'temperature', by='stock', cond=list(oxygen=10),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Temperature (°C)", ylab="Change in cell area (%)",
-       ylim=c(-50,50),xlim=c(16,26),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0.2))
-visreg(p9,'oxygen', by='stock', cond=list(temperature=25),re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("gray"),lwd=2),
-       xlab="Oxygen (kPa)", ylab="Change in cell area (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-
-par(mai=c(0.6,0.6,0.3,0))
-visreg(p9,'oxygen', by='temperature',re.form=NULL,
-       print.cond=TRUE,overlay=TRUE,jitter=TRUE,legend = FALSE,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Change in cell area (%)",
-       ylim=c(-50,50),xlim=c(8.5,22.5),
-       cex.axis=1.6,cex.lab=2)
-abline(h=0,lty=2,lwd=2)
-dev.off()
-}
-
-################################################################################
-#Question 4: Does cell size affect temperature-and-oxygen dependence of body size
-#changes in D. melanogaster?
-################################################################################
-
-# body mass in females
-f1.g4<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=female2)
-
-f2.g4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=female2)
-
-f3.g4<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=female2)
-
-f4.g4<-lmer(fresh_mass_delta~temperature*cell_area + (1|stock),REML = FALSE, data=female2)
-
-f5.g4<-lmer(fresh_mass_delta~oxygen*cell_area + (1|stock),REML = FALSE, data=female2)
-
-f6.g4<-lmer(fresh_mass_delta~temperature*oxygen*cell_area + (1|stock),REML = FALSE, data=female2)
-summary(f6.g4); Anova(f6.g4)
-
-
-fit.list.table.2 <- list(f1.g4,f2.g4,f3.g4,f4.g4,f5.g4,f6.g4)
-                         
-fit.names.table.2 <-c("temperature",
-                      "O2",  
-                      "temperature * O2",
-                      "temperature * cell_area",
-                      "O2 * cell_area",
-                      "temperature * O2 * cell_area"
-)
-
-#compare by using AICc
-fit.table.2<-aictab(fit.list.table.2,fit.names.table.2, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-fit.table.2
-
-# temperature * O2 * cell_area 10 1437.24       0.00      1      1 -708.09
-# temperature * O2              6 1455.88      18.64      0      1 -721.74
-# O2 * cell_area                6 1462.78      25.55      0      1 -725.20
-# O2                            4 1521.01      83.78      0      1 -756.41
-# temperature * cell_area       6 1523.02      85.79      0      1 -755.32
-# temperature                   4 1588.22     150.99      0      1 -790.02
-
-
-# body mass in males
-m1.g4<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=male2)
-
-m2.g4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=male2)
-
-m3.g4<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=male2)
-
-m4.g4<-lmer(fresh_mass_delta~temperature*cell_area + (1|stock),REML = FALSE, data=male2)
-
-m5.g4<-lmer(fresh_mass_delta~oxygen*cell_area + (1|stock),REML = FALSE, data=male2)
-
-m6.g4<-lmer(fresh_mass_delta~temperature*oxygen*cell_area + (1|stock),REML = FALSE, data=male2)
-summary(m6.g4); Anova(m6.g4)
-
-fit.list.table.2 <- list(m1.g4,m2.g4,m3.g4,m4.g4,m5.g4,m6.g4)
-
-fit.names.table.2 <-c("temperature",
-                      "O2",  
-                      "temperature * O2",
-                      "temperature * cell_area",
-                      "O2 * cell_area",
-                      "temperature * O2 * cell_area"
-)
-
-#compare by using AICc
-fit.table.2<-aictab(fit.list.table.2,fit.names.table.2, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-fit.table.2
-
-#                               K    AICc Delta_AICc AICcWt Cum.Wt      LL
-# temperature * O2 * cell_area 10 1412.46       0.00   0.61   0.61 -695.72
-# temperature * O2              6 1413.31       0.86   0.39   1.00 -700.47
-# O2 * cell_area                6 1503.62      91.16   0.00   1.00 -745.62
-# temperature * cell_area       6 1567.49     155.03   0.00   1.00 -777.55
-# temperature                   4 1609.10     196.65   0.00   1.00 -800.46
-# O2                            4 1630.82     218.36   0.00   1.00 -811.32
-
-# body mass in pooled sex
-p1.g4<-lmer(fresh_mass_delta~temperature + (1|stock),REML = FALSE, data=dat2)
-
-p2.g4<-lmer(fresh_mass_delta~oxygen + (1|stock),REML = FALSE, data=dat2)
-
-p3.g4<-lmer(fresh_mass_delta~temperature*oxygen + (1|stock),REML = FALSE, data=male2)
-
-p4.g4<-lmer(fresh_mass_delta~temperature*cell_area + (1|stock),REML = FALSE, data=male2)
-
-p5.g4<-lmer(fresh_mass_delta~oxygen*cell_area + (1|stock),REML = FALSE, data=male2)
-
-p6.g4<-lmer(fresh_mass_delta~temperature*oxygen*cell_area + (1|stock),REML = FALSE, data=male2)
-summary(p6.g4); Anova(p6.g4)
-
-fit.list.table.2 <- list(p1.g4,p2.g4,p3.g4,p4.g4,p5.g4,p6.g4)
-
-fit.names.table.2 <-c("temperature",
-                      "O2",  
-                      "temperature * O2",
-                      "temperature * cell_area",
-                      "O2 * cell_area",
-                      "temperature * O2 * cell_area"
-)
-
-#compare by using AICc
-fit.table.2<-aictab(fit.list.table.2,fit.names.table.2, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-fit.table.2
-
-#                               K    AICc Delta_AICc AICcWt Cum.Wt       LL
-# temperature * O2 * cell_area 10 1412.46       0.00   0.61   0.61  -695.72
-# temperature * O2              6 1413.31       0.86   0.39   1.00  -700.47
-# O2 * cell_area                6 1503.62      91.16   0.00   1.00  -745.62
-# temperature * cell_area       6 1567.49     155.03   0.00   1.00  -777.55
-# O2                            4 3237.94    1825.48   0.00   1.00 -1614.92
-# temperature                   4 3318.51    1906.06   0.00   1.00 -1655.21
-
-################################################################################
-# Figure 4 
-################################################################################
-#Figure based on the most informative model for each response variable. The model
-#structure consider temperature and oxygen and cell size interaction.
-
-#pdf("Figure 4.pdf",width = 12,height = 12,useDingbats = FALSE)
-png("Figure 4.png",width = 12,height = 12,units = "in",res = 300)
-par(mfrow=c(3,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
-    
-visreg(f6.g4,"cell_area",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-        
-visreg(f6.g4,"cell_area",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-
-visreg(m6.g4,"cell_area",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-
-visreg(f6.g4,"cell_area",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-
-visreg(p6.g4,"cell_area",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-
-visreg(p6.g4,"cell_area",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-       print.cond=TRUE,legend = FALSE,re.form=NULL,
-       points=list(col=c("#55555540"),pch=16,cex=1.4),
-       line=list(col=c("yellow","green"),lwd=4),
-       xlab="Cell area", ylab="Change in fresh mass (%)",
-       ylim=c(-50,50),xlim=c(90,270),
-       cex.axis=1.6,cex.lab=2)
-
-dev.off()
+#Export data frame
+setwd("C:/Users/Invunche/Dropbox/GitHub/Plastic_responses_DGRP_lines/Outputs/")
+write.csv(dat2,"1.1.1. Data to fit the models.csv",row.names = FALSE)
 # ------------------------------------------------------------------------------
 # saving session information with all packages versions for reproducibility purposes
-sink("C:/Users/Invunche/Dropbox/Radboud University/publicaciones/Thesis/10. Evolution of cell size/outputs/Supplementary_information_R_session.txt")
+sink("C:/Users/Invunche/Dropbox/GitHub/Plastic_responses_DGRP_lines/Outputs/1.1.2. Data_wrangling_R_session.txt")
 sessionInfo()
 sink()
 # ------------------------------------------------------------------------------
