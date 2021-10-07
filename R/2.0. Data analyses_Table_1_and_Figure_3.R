@@ -30,8 +30,10 @@ dat<-read.csv("1.1.1. Data to fit the models.csv")
 str(dat)
 dat$sex<-as.factor(dat$sex)
 ################################################################################
-#Question 1: Does developing temperature affect changes in body size traits?
+# #Question 1:  Does developing oxygen and temperature affect changes in body size 
+# traits?
 ################################################################################
+# TEMPERATURE ALONE
 # body mass
 p1<-lmer(fresh_mass_delta ~ temperature + (1|stock),REML = FALSE, data=dat)
 summary(p1);AIC(p1);logLik(p1);Anova(p1)
@@ -44,34 +46,29 @@ summary(p2);AIC(p2);logLik(p2);Anova(p2)
 p3<-lmer(cell_area_delta ~ temperature + (1|stock),REML = FALSE, data=dat)
 summary(p3);AIC(p3);logLik(p3);Anova(p3)
 
-################################################################################
-#Question 2: Does developing oxygen affect changes in body size traits?
-################################################################################
-# body mass in sex pooled
+#OXYGEN ALONE
+# body mass 
 p4<-lmer(fresh_mass_delta ~ oxygen + (1|stock),REML = FALSE, data=dat)
 summary(p4);AIC(p4);logLik(p4);Anova(p4)
 
-# wing area in sex pooled
+# wing area
 p5<-lmer(wing_area_delta ~ oxygen + (1|stock),REML = FALSE, data=dat)
 summary(p5);AIC(p5);logLik(p5);Anova(p5)
 
-# cell area in sex pooled
+# cell area
 p6<-lmer(cell_area_delta ~ oxygen + sex + (1|stock),REML = FALSE, data=dat)
 summary(p6);AIC(p6);logLik(p6);Anova(p6)
 
-################################################################################
-# #Question 3:  Does developing oxygen and temperature affect changes in body size 
-# traits?
-################################################################################
-# body mass in sex pooled
+#TEMPERATURE AND OXYGEN
+# body mass
 p7<-lmer(fresh_mass_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=dat)
 summary(p7);AIC(p7);logLik(p7);Anova(p7)
 
-# wing area in sex pooled
+# wing area
 p8<-lmer(wing_area_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=dat)
 summary(p8);AIC(p8);logLik(p8);Anova(p8)
 
-# cell area in sex pooled
+# cell area
 p9<-lmer(cell_area_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=dat)
 summary(p9);AIC(p9);logLik(p9);Anova(p9)
 
@@ -79,7 +76,7 @@ summary(p9);AIC(p9);logLik(p9);Anova(p9)
 # Figure 3 
 ################################################################################
 {
-#pdf("2.2.1. Figure 3.pdf",width = 12,height = 4,useDingbats = FALSE)
+pdf("2.2.1. Figure 3.pdf",width = 12,height = 4,useDingbats = FALSE)
 #png("2.2.1. Figure 3.png",width = 12,height = 4,units = "in",res = 300)
 par(mfrow=c(1,3),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 
@@ -88,7 +85,7 @@ visreg(p7,'oxygen', by='temperature',
        print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
        points=list(col=c("#2c7fb870","#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Standardized fresh mass (%)",
+       xlab="Oxygen (kPa)", ylab="Standardised fresh mass (%)",
        ylim=c(-50,50),xlim=c(7,23),
        cex.axis=1.6,cex.lab=2)
 abline(h=0,lty=2,lwd=2)
@@ -101,7 +98,7 @@ visreg(p8,'oxygen', by='temperature',
        print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
        points=list(col=c("#2c7fb870","#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Standardized wing area (%)",
+       xlab="Oxygen (kPa)", ylab="Standardised wing area (%)",
        ylim=c(-50,50),xlim=c(7,23),
        cex.axis=1.6,cex.lab=2)
 abline(h=0,lty=2,lwd=2)
@@ -113,7 +110,7 @@ visreg(p9,'oxygen', by='temperature',
        print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
        points=list(col=c("#2c7fb870","#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8","#de2d26"),lwd=4),
-       xlab="Oxygen (kPa)", ylab="Standardized cell area (%)",
+       xlab="Oxygen (kPa)", ylab="Standardised cell area (%)",
        ylim=c(-50,50),xlim=c(7,23),
        cex.axis=1.6,cex.lab=2)
 abline(h=0,lty=2,lwd=2)
