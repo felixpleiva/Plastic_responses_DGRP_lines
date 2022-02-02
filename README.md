@@ -1,4 +1,4 @@
-# Plastic responses in body and cell size of Drosophila Genetic Reference Panel (DGRP) lines
+# The role of cell size in shaping responses to oxygen and temperature in fruit flies
  
 This repository contains code and data needed to reproduce the manuscript: Leiva FP, Boerrigter JGJ, Verberk WCEP. The role of cell size in shaping responses to oxygen and temperature in fruit flies. 
 
