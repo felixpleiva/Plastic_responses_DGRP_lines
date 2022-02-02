@@ -11,9 +11,11 @@
 # Cleaning working space
 rm(list=ls())
 today<-format(Sys.Date(),"%Y%m%d")
+
+set.seed(6955)
 # ------------------------------------------------------------------------------
 # set working directory
-setwd("C:/Users/fleiva/Dropbox/GitHub/Plastic_responses_DGRP_lines/Outputs")
+setwd("C:/Users/Invunche/Dropbox/GitHub/Plastic_responses_DGRP_lines/Outputs")
 # check directory
 getwd()
 # ------------------------------------------------------------------------------
@@ -39,34 +41,34 @@ dat$stock<-as.factor(dat$stock)
 female=filter(dat,sex!="male")
 male=filter(dat,sex=="male")
 # ------------------------------------------------------------------------------
-# Modeling the random effect structure on fresh mass for females
+# Modelling the random effect structure on fresh mass for females
 f.lm.fm<-gls(fresh_mass~1,data=female, method = "ML")
 f.lme.fm<-lme(fresh_mass~1,random=~1|stock,data=female,method = "ML")
 anova(f.lm.fm,f.lme.fm)# Having "stock" as random effect in the intercept is more informative.
 
-# Modeling the random effect structure on fresh mass for males
+# Modelling the random effect structure on fresh mass for males
 m.lm.fm<-gls(fresh_mass~1,data=male, method = "ML")
 m.lme.fm<-lme(fresh_mass~1,random=~1|stock,data=male,method = "ML")
 anova(m.lm.fm,m.lme.fm)# Having "stock" as random effect in the intercept is more informative.
 
-# Modeling the random effect structure on fresh mass for females and males pooled
-p.lm.fm<-gls(fresh_mass~1,data=datos2, method = "ML")
-p.lme.fm<-lme(fresh_mass~1,random=~1|stock,data=datos2,method = "ML")
+# Modelling the random effect structure on fresh mass for females and males pooled
+p.lm.fm<-gls(fresh_mass~1,data=dat, method = "ML")
+p.lme.fm<-lme(fresh_mass~1,random=~1|stock,data=dat,method = "ML")
 anova(p.lm.fm,p.lme.fm)# Having "stock" as random effect in the intercept is more informative.
 #-------------------------------------------------------------------------------
-# Modeling the random effect structure on wing area for females
+# Modelling the random effect structure on wing area for females
 f.lm.ws<-gls(wing_area~1,data=female, method = "ML")
 f.lme.ws<-lme(wing_area~1,random=~1|stock,data=female,method = "ML")
 anova(f.lm.ws,f.lme.ws)# Having "stock" as random effect in the intercept is more informative.
 
-# Modeling the random effect structure on wing area for males
+# Modelling the random effect structure on wing area for males
 m.lm<-gls(wing_area~1,data=male, method = "ML")
 m.lme<-lme(wing_area~1,random=~1|stock,data=male,method = "ML")
 anova(m.lm,m.lme)# Having "stock" as random effect in the intercept is more informative.
 
 # Modelling the random effect structure on wing area for females and males pooled
-p.lm<-gls(wing_area~1,data=datos2, method = "ML")
-p.lme<-lme(wing_area~1,random=~1|stock,data=datos2,method = "ML")
+p.lm<-gls(wing_area~1,data=dat, method = "ML")
+p.lme<-lme(wing_area~1,random=~1|stock,data=dat,method = "ML")
 anova(p.lm,p.lme)# Having "stock" as random effect in the intercept is more informative.
 #-------------------------------------------------------------------------------
 # Does changes in body mass driven by cell area or cell number?
@@ -156,18 +158,18 @@ AIC(m.lme7,m.lme8);anova(m.lme7,m.lme8)
 #SEXED POOLED
 #------------------------
 #random intercept
-p.lme1<-lme(fresh_mass~cell_area,random=~1|stock,data=datos2,method="ML")
+p.lme1<-lme(fresh_mass~cell_area,random=~1|stock,data=dat,method="ML")
 summary(p.lme1)
 #random intercepts and slopes
-p.lme2<-lme(fresh_mass~cell_area,random=~1+cell_area|stock,data=datos2,method="ML")
+p.lme2<-lme(fresh_mass~cell_area,random=~1+cell_area|stock,data=dat,method="ML")
 summary(p.lme2)
 #compare fits
 AIC(p.lme1,p.lme2);anova(p.lme1,p.lme2)
 #random intercepts are better
 
-p.lme3<-lme(fresh_mass~cell_number,random=~1|stock,data=datos2,method="ML")
+p.lme3<-lme(fresh_mass~cell_number,random=~1|stock,data=dat,method="ML")
 summary(p.lme3)
-p.lme4<-lme(fresh_mass~cell_number,random=~1+cell_number|stock,data=datos2,method="ML")
+p.lme4<-lme(fresh_mass~cell_number,random=~1+cell_number|stock,data=dat,method="ML")
 summary(p.lme4)
 #compare fits
 AIC(p.lme3,p.lme4);anova(p.lme3,p.lme4)
@@ -176,18 +178,18 @@ AIC(p.lme3,p.lme4);anova(p.lme3,p.lme4)
 # Does changes in wing area are driven by cell area or cell number?
 
 #random intercept
-p.lme5<-lme(wing_area~cell_area,random=~1|stock,data=datos2,method="ML")
+p.lme5<-lme(wing_area~cell_area,random=~1|stock,data=dat,method="ML")
 summary(p.lme5)
 #random intercepts and slopes
-p.lme6<-lme(wing_area~cell_area,random=~1+cell_area|stock,data=datos2,method="ML")
+p.lme6<-lme(wing_area~cell_area,random=~1+cell_area|stock,data=dat,method="ML")
 summary(p.lme6)
 #compare fits
 AIC(p.lme5,p.lme6);anova(p.lme5,p.lme6)
 #random intercepts are better
 
-p.lme7<-lme(wing_area~cell_number,random=~1|stock,data=datos2,method="ML")
+p.lme7<-lme(wing_area~cell_number,random=~1|stock,data=dat,method="ML")
 summary(p.lme7)
-p.lme8<-lme(wing_area~cell_number,random=~1+cell_number|stock,data=datos2,method="ML")
+p.lme8<-lme(wing_area~cell_number,random=~1+cell_number|stock,data=dat,method="ML")
 summary(p.lme8)
 #compare fits
 AIC(p.lme7,p.lme8);anova(p.lme7,p.lme8)
@@ -197,45 +199,45 @@ AIC(p.lme7,p.lme8);anova(p.lme7,p.lme8)
 # ------------------------------------------------------------------------------
 # Females fresh mass
 f.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE, data=female)
-summary(f.lme1);AIC(f.lme1);logLik(f.lme1) 
+AIC(f.lme1);logLik(f.lme1) 
 
 f.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-summary(f.lme3);AIC(f.lme3);logLik(f.lme3)
+AIC(f.lme3);logLik(f.lme3)
 
 # Females wing area
 f.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=female)
-summary(f.lme5);AIC(f.lme5);logLik(f.lme5)
+AIC(f.lme5);logLik(f.lme5)
 
 f.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-summary(f.lme7);AIC(f.lme7);logLik(f.lme7)
+AIC(f.lme7);logLik(f.lme7)
 
 # Males fresh mass
 m.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=male)
 summary(m.lme1);AIC(m.lme1);logLik(m.lme1)
 
 m.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-summary(m.lme3);AIC(m.lme3);logLik(m.lme3)
+AIC(m.lme3);logLik(m.lme3)
 
 # Males wing area
 m.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=male)
-summary(m.lme5);AIC(m.lme5);logLik(m.lme5)
+AIC(m.lme5);logLik(m.lme5)
 
 m.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-summary(m.lme7);AIC(m.lme7);logLik(m.lme7)
+AIC(m.lme7);logLik(m.lme7)
 
 # Sex pooled fresh mass
-p.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE,data=datos2)
-summary(p.lme1);AIC(p.lme1);logLik(p.lme1)
+p.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
+AIC(p.lme1);logLik(p.lme1)
 
-p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=datos2)
-summary(p.lme3);AIC(p.lme3);logLik(p.lme3)
+p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
+AIC(p.lme3);logLik(p.lme3)
 
 # Sex pooled wing area
-p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=datos2)
-summary(p.lme5);AIC(p.lme5);logLik(p.lme5)
+p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
+AIC(p.lme5);logLik(p.lme5)
 
-p.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=datos2)
-summary(p.lme7);AIC(p.lme7);logLik(p.lme7)
+p.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
+AIC(p.lme7);logLik(p.lme7)
 
 # ------------------------------------------------------------------------------
 # Figure 4
@@ -243,9 +245,7 @@ summary(p.lme7);AIC(p.lme7);logLik(p.lme7)
 {
 # Fresh mass vs cell size in females
 f.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE, data=female)
-coef(summary(f.lme1))[ , "Estimate"]
-# (Intercept)   cell_area 
-# -1.0918840     0.5060483
+#coef(summary(f.lme1))[ , "Estimate"]
 
 female$pred <- predict(f.lme1,re.form=NA)
 female$pred1 <- predict(f.lme1)
@@ -258,18 +258,14 @@ f.lme1.plot=
     xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
     ylab("Fresh mass, FM (mg)") + 
     ggtitle("Females")+
-    theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 0.225, 
-             label = "Log[10]~FM== -1.092~+~0.506~Log[10]~CA",parse = TRUE,size=4)+
+    theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
+    # annotate('text', x = 2.15, y = 0.225, 
+    #          label = "Log[10]~FM== -1.035~+~0.481~Log[10]~CA",parse = TRUE,size=4)+
     theme_bw()
 f.lme1.plot
 
 # Fresh mass vs cell number in females
 f.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-
-coef(summary(f.lme3))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# -0.1841082       0.0587046
 
 female$pred <- predict(f.lme3,re.form=NA)
 female$pred1 <- predict(f.lme3)
@@ -281,18 +277,12 @@ f.lme3.plot=
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab("Fresh mass, FM (mg)") + 
-    #ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 0.225, 
-             label = "Log[10]~FM== -0.184~+~0.059~Log[10]~CN",parse = TRUE,size=4)+
-    theme_bw()
+        theme_bw()
 f.lme3.plot
 
 # Wing area vs cell size in females
 f.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=female)
-coef(summary(f.lme5))[ , "Estimate"]
-# (Intercept) cell_area_log 
-# 3.9843090     0.9259218
 
 female$pred <- predict(f.lme5,re.form=NA)
 female$pred1 <- predict(f.lme5)
@@ -304,18 +294,12 @@ f.lme5.plot=
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
-    #ggtitle("Females")+
-    theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 6.275, 
-             label = "Log[10]~WA== 3.984~+~0.926~Log[10]~CA",parse = TRUE,size=4)+
+    theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw()
 f.lme5.plot
 
 # Wing area vs cell number in females
 f.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-coef(summary(f.lme7))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# 2.7882992       0.8556163
 
 female$pred <- predict(f.lme7,re.form=NA)
 female$pred1 <- predict(f.lme7)
@@ -327,18 +311,12 @@ f.lme7.plot=
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
-    #ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 6.275, 
-             label = "Log[10]~WA== 2.788~+~0.856~Log[10]~CN",parse = TRUE,size=4)+
     theme_bw()
 f.lme7.plot
 # ------------------------------------------------------------------------------
 # Fresh mass vs cell size in males
 m.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=male)
-coef(summary(m.lme1))[ , "Estimate"]
-# (Intercept)   cell_area 
-# -1.677923      0.716342
 
 male$pred <- predict(m.lme1,re.form=NA)
 male$pred1 <- predict(m.lme1)
@@ -352,16 +330,11 @@ m.lme1.plot=
     ylab("Fresh mass, FM (mg)") + 
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 0.225, 
-             label = "Log[10]~FM== -1.678~+~0.716~Log[10]~CA",parse = TRUE,size=4)+
     theme_bw()
 m.lme1.plot
 
 # Fresh mass vs cell number in males
 m.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-coef(summary(m.lme3))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# -2.4318953       0.6083037
 
 male$pred <- predict(m.lme3,re.form=NA)
 male$pred1 <- predict(m.lme3)
@@ -373,18 +346,12 @@ m.lme3.plot=
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab("Fresh mass, FM (mg)") + 
-    #ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 0.225, 
-             label = "Log[10]~FM== -2.432~+~0.608~Log[10]~CN",parse = TRUE,size=4)+
     theme_bw()
 m.lme3.plot
 
 # Wing area vs cell size in males
 m.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=male)
-coef(summary(m.lme5))[ , "Estimate"]
-# (Intercept) cell_area_log 
-# 3.561585      1.104774
 
 male$pred <- predict(m.lme5,re.form=NA)
 male$pred1 <- predict(m.lme5)
@@ -396,18 +363,12 @@ m.lme5.plot=
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
-    #ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 6.275, 
-             label = "Log[10]~WA== 3.562~+~1.105~Log[10]~CA",parse = TRUE,size=4)+
     theme_bw()
 m.lme5.plot
 
 # Wing area vs cell number in males
 m.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-coef(summary(m.lme7))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# 1.335721        1.218788
 
 male$pred <- predict(m.lme7,re.form=NA)
 male$pred1 <- predict(m.lme7)
@@ -419,23 +380,17 @@ m.lme7.plot=
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
-    #ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 6.275, 
-             label = "Log[10]~WA== 1.336~+~1.219~Log[10]~CN",parse = TRUE,size=4)+
     theme_bw()
 m.lme7.plot
 
 # ------------------------------------------------------------------------------
 # Fresh mass vs cell size in sex pooled
-p.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=datos2)
-coef(summary(p.lme1))[ , "Estimate"]
-# (Intercept)   cell_area 
-# -2.917705      1.305862
+p.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=dat)
 
-datos2$pred <- predict(p.lme1,re.form=NA)
-datos2$pred1 <- predict(p.lme1)
-p.lme1 <- ggplot(datos2,aes(cell_area_log,fresh_mass_log))+
+dat$pred <- predict(p.lme1,re.form=NA)
+dat$pred1 <- predict(p.lme1)
+p.lme1 <- ggplot(dat,aes(cell_area_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
     geom_point(colour="#55555540",size=2)
 p.lme1.plot=
@@ -444,22 +399,16 @@ p.lme1.plot=
     xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
     ylab("Fresh mass, FM (mg)") + 
     ggtitle("Sex pooled")+
-    theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 0.225, 
-             label = "Log[10]~FM== -2.918~+~1.306~Log[10]~CA",parse = TRUE,size=4)+
+    theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw()
 p.lme1.plot
 
 # Fresh mass vs cell number in sex pooled
-p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=datos2)
+p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
 
-coef(summary(p.lme3))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# -5.001671        1.303337
-
-datos2$pred <- predict(p.lme3,re.form=NA)
-datos2$pred1 <- predict(p.lme3)
-p.lme3 <- ggplot(datos2,aes(cell_number_log,fresh_mass_log))+
+dat$pred <- predict(p.lme3,re.form=NA)
+dat$pred1 <- predict(p.lme3)
+p.lme3 <- ggplot(dat,aes(cell_number_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
     geom_point(colour="#55555540",size=2)
 p.lme3.plot=
@@ -467,22 +416,16 @@ p.lme3.plot=
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab("Fresh mass, FM (mg)") + 
-    #ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 0.225, 
-             label = "Log[10]~FM== -5.002~+~1.303~Log[10]~CN",parse = TRUE,size=4)+
     theme_bw()
 p.lme3.plot
 
 # Wing area vs cell size in sex pooled
-p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=datos2)
-coef(summary(p.lme5))[ , "Estimate"]
-# (Intercept) cell_area_log 
-# 3.420675      1.173961
+p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
 
-datos2$pred <- predict(p.lme5,re.form=NA)
-datos2$pred1 <- predict(p.lme5)
-p.lme5 <- ggplot(datos2,aes(cell_area_log,wing_area_log))+
+dat$pred <- predict(p.lme5,re.form=NA)
+dat$pred1 <- predict(p.lme5)
+p.lme5 <- ggplot(dat,aes(cell_area_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
     geom_point(colour="#55555540",size=2)
 p.lme5.plot=
@@ -490,22 +433,16 @@ p.lme5.plot=
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
-    #ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 2.15, y = 6.275, 
-             label = "Log[10]~WA== 3.421~+~1.174~Log[10]~CA",parse = TRUE,size=4)+
     theme_bw()
 p.lme5.plot
 
 # Wing area vs cell number in sex pooled
-p.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=datos2)
-coef(summary(p.lme7))[ , "Estimate"]
-# (Intercept) cell_number_log 
-# 0.3923755       1.4753276
+p.lme7<-lmer(wing_area_log~cell_number_log + (1|stock),REML = TRUE,data=dat)
 
-datos2$pred <- predict(p.lme7,re.form=NA)
-datos2$pred1 <- predict(p.lme7)
-p.lme7 <- ggplot(datos2,aes(cell_number_log,wing_area_log))+
+dat$pred <- predict(p.lme7,re.form=NA)
+dat$pred1 <- predict(p.lme7)
+p.lme7 <- ggplot(dat,aes(cell_number_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(3.7,4))+
     geom_point(colour="#55555540",size=2)
 p.lme7.plot=
@@ -513,15 +450,12 @@ p.lme7.plot=
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
     xlab("Cell number, CN") + 
     ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
-    #ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    annotate('text', x = 3.85, y = 6.275, 
-             label = "Log[10]~WA== 3.392~+~1.475~Log[10]~CN",parse = TRUE,size=4)+
     theme_bw()
 p.lme7.plot
 # ------------------------------------------------------------------------------
 #Figure 4
-Figure_S1<-plot_grid(f.lme1.plot,m.lme1.plot,p.lme1.plot,
+Figure_4<-plot_grid(f.lme1.plot,m.lme1.plot,p.lme1.plot,
                      f.lme3.plot,m.lme3.plot,p.lme3.plot,
                      f.lme5.plot,m.lme5.plot,p.lme5.plot,
                      f.lme7.plot,m.lme7.plot,p.lme7.plot,

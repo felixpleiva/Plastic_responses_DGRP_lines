@@ -31,593 +31,22 @@ female=subset(dat,sex!="male")
 male=subset(dat,sex=="male")
 # ------------------------------------------------------------------------------
 ################################################################################
-#Question 4: Does cell size affect temperature-and-oxygen dependence of body size
+#Question 2: Does cell size affect temperature-and-oxygen dependence of body size
 #changes in D. melanogaster?
 ################################################################################
-# # RELATIVE body mass in females
-# f1.Q4<-lmer(fresh_mass_delta ~ temperature + (1|stock),REML = FALSE, data=female)
-# 
-# f2.Q4<-lmer(fresh_mass_delta ~ oxygen + (1|stock),REML = FALSE, data=female)
-# 
-# f3.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=female)
-# 
-# f4.Q4<-lmer(fresh_mass_delta ~ temperature * cell_area_delta + (1|stock),REML = FALSE, data=female)
-# 
-# f5.Q4<-lmer(fresh_mass_delta ~ oxygen * cell_area_delta + (1|stock),REML = FALSE, data=female)
-# 
-# f6.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen * cell_area_delta + (1|stock),REML = FALSE, data=female)
-# 
-# fit.list.table.3 <- list(f1.Q4,f2.Q4,f3.Q4,f4.Q4,f5.Q4,f6.Q4)
-# 
-# fit.names.table.3 <-c("temperature",
-#                       "oxygen",  
-#                       "temperature * oxygen",
-#                       "temperature * cell_area_delta",
-#                       "oxygen * cell_area_delta",
-#                       "temperature * oxygen * cell_area_delta"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #     
-# #                                         K    AICc Delta_AICc AICcWt Cum.Wt      LL
-# # temperature * oxygen * cell_area_delta 10 1442.16       0.00      1      1 -710.56
-# # temperature * oxygen                    6 1455.88      13.71      0      1 -721.74
-# # oxygen * cell_area_delta                6 1459.71      17.54      0      1 -723.66
-# # temperature * cell_area_delta           6 1485.63      43.47      0      1 -736.62
-# # oxygen                                  4 1521.01      78.85      0      1 -756.41
-# # temperature                             4 1588.22     146.06      0      1 -790.02
-# 
-# 
-# summary(f6.Q4)
-# 
-# # Fixed effects:
-# #                                     Estimate Std. Error t value
-# # (Intercept)                        -1.942628  11.229507  -0.173
-# # temperature                        -0.828850   0.543090  -1.526
-# # oxygen                             -0.639635   0.653674  -0.979
-# # cell_area_delta                    -1.108254   0.896478  -1.236
-# # temperature:oxygen                  0.063730   0.030962   2.058
-# # temperature:cell_area_delta         0.083684   0.047164   1.774
-# # oxygen:cell_area_delta              0.016814   0.055475   0.303
-# # temperature:oxygen:cell_area_delta -0.001944   0.002924  -0.665
-# 
-# Anova(f6.Q4)
-# 
-# # Response: fresh_mass_delta
-# #                                       Chisq Df Pr(>Chisq)    
-# # temperature                         1.6591  1   0.197727    
-# # oxygen                             32.1048  1  1.461e-08 ***
-# # cell_area_delta                     8.2251  1   0.004132 ** 
-# # temperature:oxygen                  4.4687  1   0.034521 *  
-# # temperature:cell_area_delta        10.5517  1   0.001161 ** 
-# # oxygen:cell_area_delta              4.1825  1   0.040845 *  
-# # temperature:oxygen:cell_area_delta  0.4421  1   0.506131 
-# 
-# 
-# # RELATIVE body mass in males
-# m1.Q4<-lmer(fresh_mass_delta ~ temperature + (1|stock),REML = FALSE, data=male)
-# 
-# m2.Q4<-lmer(fresh_mass_delta ~ oxygen + (1|stock),REML = FALSE, data=male)
-# 
-# m3.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=male)
-# 
-# m4.Q4<-lmer(fresh_mass_delta ~ temperature  * cell_area_delta + (1|stock),REML = FALSE, data=male)
-# 
-# m5.Q4<-lmer(fresh_mass_delta ~ oxygen * cell_area_delta + (1|stock),REML = FALSE, data=male)
-# 
-# m6.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen * cell_area_delta + (1|stock),REML = FALSE, data=male)
-# 
-# fit.list.table.3 <- list(m1.Q4,m2.Q4,m3.Q4,m4.Q4,m5.Q4,m6.Q4)
-# 
-# fit.names.table.3 <-c("temperature",
-#                       "oxygen",  
-#                       "temperature * oxygen",
-#                       "temperature * cell_area_delta",
-#                       "O2 * cell_area_delta",
-#                       "temperature * O2 * cell_area_delta"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #     
-# #                                     K    AICc Delta_AICc AICcWt Cum.Wt      LL
-# # temperature * O2 * cell_area_delta 10 1413.00       0.00   0.54   0.54 -695.99
-# # temperature * oxygen                6 1413.31       0.31   0.46   1.00 -700.47
-# # O2 * cell_area_delta                6 1497.36      84.36   0.00   1.00 -742.49
-# # temperature * cell_area_delta       6 1514.70     101.69   0.00   1.00 -751.16
-# # temperature                         4 1609.10     196.10   0.00   1.00 -800.46
-# # oxygen                              4 1630.82     217.82   0.00   1.00 -811.32
-# 
-# summary(m6.Q4)
-# # Fixed effects:
-# #                                     Estimate Std. Error t value
-# # (Intercept)                        42.759712  11.456133   3.732
-# # temperature                        -2.699177   0.547956  -4.926
-# # oxygen                             -0.706549   0.692672  -1.020
-# # cell_area_delta                    -1.670093   0.909285  -1.837
-# # temperature:oxygen                  0.074008   0.031656   2.338
-# # temperature:cell_area_delta         0.091212   0.046962   1.942
-# # oxygen:cell_area_delta              0.051022   0.053422   0.955
-# # temperature:oxygen:cell_area_delta -0.002884   0.002711  -1.064
-# 
-# Anova(m6.Q4)
-# # Response: fresh_mass_delta
-# 
-# #                                       Chisq Df Pr(>Chisq)    
-# # temperature                         87.4559  1  < 2.2e-16 ***
-# # oxygen                             122.7237  1  < 2.2e-16 ***
-# # cell_area_delta                      0.1524  1   0.696267    
-# # temperature:oxygen                   5.4908  1   0.019117 *  
-# # temperature:cell_area_delta          7.8966  1   0.004953 ** 
-# # oxygen:cell_area_delta               0.2096  1   0.647089    
-# # temperature:oxygen:cell_area_delta   1.1313  1   0.287505
-# 
-# 
-# # RELATIVE body mass in pooled sex
-# p1.Q4<-lmer(fresh_mass_delta ~ temperature + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p2.Q4<-lmer(fresh_mass_delta ~ oxygen + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p3.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p4.Q4<-lmer(fresh_mass_delta ~ temperature * cell_area_delta + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p5.Q4<-lmer(fresh_mass_delta ~ oxygen * cell_area_delta + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p6.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen * cell_area_delta + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# fit.list.table.3 <- list(p1.Q4,p2.Q4,p3.Q4,p4.Q4,p5.Q4,p6.Q4)
-# 
-# fit.names.table.3 <-c("temperature + sex",
-#                       "oxygen + sex",  
-#                       "temperature * oxygen + sex",
-#                       "temperature * cell_area_delta + sex",
-#                       "oxygen * cell_area_delta + sex",
-#                       "temperature * oxygen * cell_area_delta + sex"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #     
-# #                                               K    AICc Delta_AICc AICcWt Cum.Wt       LL
-# # temperature * oxygen * cell_area_delta + sex 11 2976.38       0.00   0.89   0.89 -1476.89
-# # temperature * oxygen + sex                    7 2980.63       4.25   0.11   1.00 -1483.19
-# # oxygen * cell_area_delta + sex                7 3037.35      60.97   0.00   1.00 -1511.55
-# # temperature * cell_area_delta + sex           7 3086.57     110.20   0.00   1.00 -1536.16
-# # oxygen + sex                                  5 3161.11     184.73   0.00   1.00 -1575.49
-# # temperature + sex                             5 3232.57     256.19   0.00   1.00 -1611.22
-# 
-# summary(p6.Q4)
-# # Fixed effects:
-# #                                     Estimate Std. Error t value
-# # (Intercept)                        23.462634   9.254065   2.535
-# # temperature                        -2.127919   0.443148  -4.802
-# # oxygen                             -0.923265   0.552125  -1.672
-# # cell_area_delta                    -1.103734   0.752379  -1.467
-# # sexmale                             7.604513   0.615075  12.364
-# # temperature:oxygen                  0.082197   0.025623   3.208
-# # temperature:cell_area_delta         0.066944   0.039131   1.711
-# # oxygen:cell_area_delta              0.017808   0.045117   0.395
-# # temperature:oxygen:cell_area_delta -0.001440   0.002331  -0.618
-# 
-# Anova(p6.Q4)
-# # Response: fresh_mass_delta
-# #                                       Chisq Df Pr(>Chisq)    
-# # temperature                         34.4821  1  4.302e-09 ***
-# # oxygen                              99.2716  1  < 2.2e-16 ***
-# # cell_area_delta                      0.4938  1  0.4822322    
-# # sex                                152.8572  1  < 2.2e-16 ***
-# # temperature:oxygen                  10.4383  1  0.0012343 ** 
-# # temperature:cell_area_delta         11.0171  1  0.0009028 ***
-# # oxygen:cell_area_delta               1.3973  1  0.2371845    
-# # temperature:oxygen:cell_area_delta   0.3815  1  0.5367987
-# ################################################################################
-# # Figure 5
-# ################################################################################
-# #Figure based on the most informative model for each response variable. The model
-# #structure consider temperature and oxygen and cell size interaction.
-# {
-# #pdf("4.2.1. Figure 5.pdf",width = 8,height = 8,useDingbats = FALSE)
-# png("4.2.1. Figure 5.png",width = 8,height = 8,units = "in",res = 300)
-# par(mfrow=c(2,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
-# 
-# # females at 17°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(f6.Q4,"cell_area_delta",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#2c7fb870"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab="Change in cell area (%)", ylab="Change in fresh mass (%)",
-#        ylim=c(-50,50),xlim=c(-50,50),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# abline(h=0,lty=2,lwd=2)
-# abline(v=0,lty=2,lwd=2)
-# ## Draw a polygon defining an area on the graph
-# xx = c(-49.8,-49.8,49.8,49.8)
-# yy = c(35,49.8,49.8,35)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(0,42.5,"cold-developed females",col="#2c7fb8",font=2,cex=1.5)
-# 
-# # females at 25°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(f6.Q4,"cell_area_delta",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#de2d2670"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab="Change in cell area (%)", ylab="Change in fresh mass (%)",
-#        ylim=c(-50,50),xlim=c(-50,50),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# abline(h=0,lty=2,lwd=2)
-# abline(v=0,lty=2,lwd=2)
-# ## Draw a polygon defining an area on the graph
-# xx = c(-49.8,-49.8,49.8,49.8)
-# yy = c(35,49.8,49.8,35)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(0,42.5,"warm-developed females",col="#de2d26",font=2,cex=1.5)
-# 
-# # males at 17°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(m6.Q4,"cell_area_delta",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#2c7fb870"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab="Change in cell area (%)", ylab="Change in fresh mass (%)",
-#        ylim=c(-50,50),xlim=c(-50,50),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# abline(h=0,lty=2,lwd=2)
-# abline(v=0,lty=2,lwd=2)
-# ## Draw a polygon defining an area on the graph
-# xx = c(-49.8,-49.8,49.8,49.8)
-# yy = c(35,49.8,49.8,35)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# text(0,42.5,"cold-developed males",col="#2c7fb8",font=2,cex=1.5)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# 
-# # males at 25°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(m6.Q4,"cell_area_delta",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#de2d2670"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab="Change in cell area (%)", ylab="Change in fresh mass (%)",
-#        ylim=c(-50,50),xlim=c(-50,50),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# abline(h=0,lty=2,lwd=2)
-# abline(v=0,lty=2,lwd=2)
-# ## Draw a polygon defining an area on the graph
-# xx = c(-49.8,-49.8,49.8,49.8)
-# yy = c(35,49.8,49.8,35)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(0,42.5,"warm-developed males",col="#de2d26",font=2,cex=1.5)
-# 
-# dev.off()
-# }
-# #-------------------------------------------------------------------------------
-# # Perform similar analysis but using the final body mass and final cell size
-# #-------------------------------------------------------------------------------
-# # ABSOLUTE body mass in females
-# f1.Q4<-lmer(fresh_mass ~ temperature + (1|stock),REML = FALSE, data=female)
-# 
-# f2.Q4<-lmer(fresh_mass ~ oxygen + (1|stock),REML = FALSE, data=female)
-# 
-# f3.Q4<-lmer(fresh_mass ~ temperature * oxygen + (1|stock),REML = FALSE, data=female)
-# 
-# f4.Q4<-lmer(fresh_mass ~ temperature * cell_area + (1|stock),REML = FALSE, data=female)
-# 
-# f5.Q4<-lmer(fresh_mass ~ oxygen * cell_area + (1|stock),REML = FALSE, data=female)
-# 
-# f6.Q4<-lmer(fresh_mass ~ temperature * oxygen * cell_area + (1|stock),REML = FALSE, data=female)
-# 
-# fit.list.table.3 <- list(f1.Q4,f2.Q4,f3.Q4,f4.Q4,f5.Q4,f6.Q4)
-# 
-# fit.names.table.3 <-c("temperature",
-#                       "oxygen",  
-#                       "temperature * oxygen",
-#                       "temperature * cell_area",
-#                       "oxygen * cell_area",
-#                       "temperature * oxygen * cell_area"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #                                   K    AICc Delta_AICc AICcWt Cum.Wt     LL
-# # temperature * oxygen * cell_area 10 -497.33       0.00      1      1 259.19
-# # temperature * oxygen              6 -484.87      12.46      0      1 248.63
-# # oxygen * cell_area                6 -473.98      23.35      0      1 243.19
-# # oxygen                            4 -425.92      71.41      0      1 217.05
-# # temperature * cell_area           6 -424.34      72.99      0      1 218.37
-# # temperature                       4 -364.10     133.23      0      1 186.14
-# 
-# summary(f6.Q4)
-# 
-# # Fixed effects:
-# #                                Estimate Std. Error t value
-# # (Intercept)                   2.280e+00  6.280e-01   3.630
-# # temperature                  -9.158e-02  3.045e-02  -3.007
-# # oxygen                       -9.846e-02  3.815e-02  -2.581
-# # cell_area                    -5.497e-03  3.709e-03  -1.482
-# # temperature:oxygen            6.286e-03  1.898e-03   3.312
-# # temperature:cell_area         4.415e-04  1.884e-04   2.343
-# # oxygen:cell_area              4.687e-04  2.211e-04   2.119
-# # temperature:oxygen:cell_area -2.960e-05  1.136e-05  -2.606
-# 
-# Anova(f6.Q4)
-# 
-# # Response: fresh_mass_delta
-# #                               Chisq Df Pr(>Chisq)    
-# # temperature                   2.9862  1   0.083975 .  
-# # oxygen                       39.4647  1   3.34e-10 ***
-# # cell_area                     9.8815  1   0.001669 ** 
-# # temperature:oxygen           22.8296  1   1.77e-06 ***
-# # temperature:cell_area         0.1049  1   0.746066    
-# # oxygen:cell_area              5.6944  1   0.017019 *  
-# # temperature:oxygen:cell_area  6.7910  1   0.009162 ** 
-# 
-# 
-# # ABSOLUTE body mass in males
-# m1.Q4<-lmer(fresh_mass ~ temperature + (1|stock),REML = FALSE, data=male)
-# 
-# m2.Q4<-lmer(fresh_mass ~ oxygen + (1|stock),REML = FALSE, data=male)
-# 
-# m3.Q4<-lmer(fresh_mass ~ temperature * oxygen + (1|stock),REML = FALSE, data=male)
-# 
-# m4.Q4<-lmer(fresh_mass ~ temperature  * cell_area + (1|stock),REML = FALSE, data=male)
-# 
-# m5.Q4<-lmer(fresh_mass ~ oxygen * cell_area + (1|stock),REML = FALSE, data=male)
-# 
-# m6.Q4<-lmer(fresh_mass ~ temperature * oxygen * cell_area + (1|stock),REML = FALSE, data=male)
-# 
-# fit.list.table.3 <- list(m1.Q4,m2.Q4,m3.Q4,m4.Q4,m5.Q4,m6.Q4)
-# 
-# fit.names.table.3 <-c("temperature",
-#                       "oxygen",  
-#                       "temperature * oxygen",
-#                       "temperature * cell_area",
-#                       "oxygen * cell_area",
-#                       "temperature * oxygen * cell_area"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #     
-# #                                   K    AICc Delta_AICc AICcWt Cum.Wt     LL
-# # temperature * oxygen * cell_area 10 -779.63       0.00      1      1 400.33
-# # temperature * oxygen              6 -768.78      10.85      0      1 390.58
-# # oxygen * cell_area                6 -694.80      84.83      0      1 353.59
-# # temperature * cell_area           6 -634.21     145.42      0      1 323.30
-# # temperature                       4 -578.49     201.14      0      1 293.33
-# # oxygen                            4 -556.64     222.99      0      1 282.41
-# 
-# summary(m6.Q4)
-# # Fixed effects:
-# #                                Estimate Std. Error t value
-# # (Intercept)                   6.857e-01  3.507e-01   1.955
-# # temperature                  -3.453e-04  1.627e-02  -0.021
-# # oxygen                       -1.060e-02  2.024e-02  -0.524
-# # cell_area                     3.838e-03  2.342e-03   1.639
-# # temperature:oxygen            5.656e-04  9.507e-04   0.595
-# # temperature:cell_area        -1.997e-04  1.141e-04  -1.750
-# # oxygen:cell_area             -3.923e-05  1.341e-04  -0.293
-# # temperature:oxygen:cell_area  4.004e-06  6.513e-06   0.615
-# 
-# Anova(m6.Q4)
-# # Response: fresh_mass
-# #                                 Chisq Df Pr(>Chisq)    
-# # temperature                   62.4762  1  2.697e-15 ***
-# # oxygen                       163.5999  1  < 2.2e-16 ***
-# # cell_area                      4.4017  1  0.0359028 *  
-# # temperature:oxygen            56.0633  1  7.018e-14 ***
-# # temperature:cell_area         13.7773  1  0.0002058 ***
-# # oxygen:cell_area               2.5883  1  0.1076562    
-# # temperature:oxygen:cell_area   0.3781  1  0.5386433
-# 
-# 
-# # ABSOLUTE body mass in pooled sex
-# p1.Q4<-lmer(fresh_mass ~ temperature + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p2.Q4<-lmer(fresh_mass ~ oxygen + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p3.Q4<-lmer(fresh_mass ~ temperature * oxygen + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p4.Q4<-lmer(fresh_mass ~ temperature * cell_area + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p5.Q4<-lmer(fresh_mass ~ oxygen * cell_area + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# p6.Q4<-lmer(fresh_mass ~ temperature * oxygen * cell_area + sex + (1|stock),REML = FALSE, data=dat)
-# 
-# fit.list.table.3 <- list(p1.Q4,p2.Q4,p3.Q4,p4.Q4,p5.Q4,p6.Q4)
-# 
-# fit.names.table.3 <-c("temperature + sex",
-#                       "oxygen + sex",  
-#                       "temperature * oxygen + sex",
-#                       "temperature * cell_area + sex",
-#                       "oxygen * cell_area + sex",
-#                       "temperature * oxygen * cell_area + sex"
-# )
-# 
-# #compare by using AICc
-# fit.table.3<-aictab(fit.list.table.3,fit.names.table.3, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
-# fit.table.3
-# 
-# # Model selection based on AICc:
-# #     
-# #                                         K     AICc Delta_AICc AICcWt Cum.Wt     LL
-# # temperature * oxygen * cell_area + sex 11 -1078.94       0.00      1      1 550.77
-# # temperature * oxygen + sex              7 -1059.59      19.35      0      1 536.92
-# # oxygen * cell_area + sex                7 -1045.21      33.73      0      1 529.73
-# # temperature * cell_area + sex           7  -962.97     115.98      0      1 488.61
-# # oxygen + sex                            5  -911.21     167.73      0      1 460.67
-# # temperature + sex                       5  -838.62     240.32      0      1 424.38
-# 
-# summary(p6.Q4)
-# # Fixed effects:
-# #                                Estimate Std. Error t value
-# # (Intercept)                   9.420e-01  3.743e-01   2.517
-# # temperature                  -1.297e-02  1.767e-02  -0.734
-# # oxygen                       -6.041e-03  2.173e-02  -0.278
-# # cell_area                     3.159e-03  2.332e-03   1.355
-# # sexmale                      -3.169e-01  1.038e-02 -30.537
-# # temperature:oxygen            7.153e-04  1.046e-03   0.684
-# # temperature:cell_area        -6.074e-05  1.164e-04  -0.522
-# # oxygen:cell_area             -7.495e-05  1.341e-04  -0.559
-# # temperature:oxygen:cell_area  3.139e-06  6.700e-06   0.468
-# 
-# Anova(p6.Q4)
-# # Response: fresh_mass
-# #                                Chisq Df Pr(>Chisq)    
-# # temperature                    1.4858  1     0.2229    
-# # oxygen                        83.6306  1  < 2.2e-16 ***
-# # cell_area                     29.2227  1  6.452e-08 ***
-# # sex                          932.5354  1  < 2.2e-16 ***
-# # temperature:oxygen            40.2315  1  2.256e-10 ***
-# # temperature:cell_area          0.0591  1     0.8079    
-# # oxygen:cell_area               0.2745  1     0.6003    
-# # temperature:oxygen:cell_area   0.2195  1     0.6394
-# 
-# {
-# #pdf("4.2.2. Figure 5.pdf",width = 8,height = 8,useDingbats = FALSE)
-# png("4.2.2. Figure 5.png",width = 8,height = 8,units = "in",res = 300)
-# par(mfrow=c(2,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
-# 
-# # females at 17°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(f6.Q4,"cell_area",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-#    print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#2c7fb870"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab=(expression(paste("Cell area ","(", mu,"m"^"2",")"))), ylab="Fresh mass (mg)",
-#        ylim=c(0.5,1.6),xlim=c(90,260),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# 
-# ## Draw a polygon defining an area on the graph
-# xx = c(90.2,90.2,259.8,259.8)
-# yy = c(1.5,1.598,1.598,1.5)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(175,1.55,"cold-developed females",col="#2c7fb8",font=2,cex=1.5)
-#     
-# # females at 25°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(f6.Q4,"cell_area",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#de2d2670"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab=(expression(paste("Cell area ","(", mu,"m"^"2",")"))), ylab="Fresh mass (mg)",
-#        ylim=c(0.5,1.6),xlim=c(90,260),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# 
-# ## Draw a polygon defining an area on the graph
-# xx = c(90.2,90.2,259.8,259.8)
-# yy = c(1.5,1.598,1.598,1.5)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(175,1.55,"warm-developed females",col="#de2d26",font=2,cex=1.5)
-# 
-# 
-# # males at 17°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(m6.Q4,"cell_area",by="oxygen",cond=list(temperature=17),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#2c7fb870"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab=(expression(paste("Cell area ","(", mu,"m"^"2",")"))), ylab="Fresh mass (mg)",
-#        ylim=c(0.5,1.6),xlim=c(90,260),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# 
-# ## Draw a polygon defining an area on the graph
-# xx = c(90.2,90.2,259.8,259.8)
-# yy = c(1.5,1.598,1.598,1.5)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(175,1.55,"cold-developed males",col="#2c7fb8",font=2,cex=1.5)
-#     
-# # males at 25°C
-# par(mai=c(0.7,0.7,0.2,0.2))
-# visreg(m6.Q4,"cell_area",by="oxygen",cond=list(temperature=25),overlay=TRUE,
-#        print.cond=TRUE,legend = FALSE,
-#        points=list(col=c("#de2d2670"),pch=16,cex=1.4),
-#        line=list(col=c("#FF9933", "#00CC66"), lwd=4),
-#        xlab=(expression(paste("Cell area ","(", mu,"m"^"2",")"))), ylab="Fresh mass (mg)",
-#        ylim=c(0.5,1.6),xlim=c(90,260),
-#        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
-#        cex.axis=1.5,cex.lab=1.5)
-# 
-# ## Draw a polygon defining an area on the graph
-# xx = c(90.2,90.2,259.8,259.8)
-# yy = c(1.5,1.598,1.598,1.5)
-# polygon(xx,yy, col = 'grey90', border = NA)
-# 
-# legend("bottomright", legend=c("10 kPa", "21 kPa"),
-#        lty = 1,lwd=4, bty="n",
-#        col=c("#FF9933", "#00CC66"),cex=1.4)
-# text(175,1.55,"warm-developed males",col="#de2d26",font=2,cex=1.5)
-# 
-# 
-# dev.off()
-# }
-# ------------------------------------------------------------------------------
-# Sex pooled but NOT INCLUDED
-# ------------------------------------------------------------------------------
-p1.Q4<-lmer(fresh_mass_delta ~ temperature + (1|stock),REML = FALSE, data=dat)
+p1<-lmer(fresh_mass_delta ~ temperature + (1|stock),REML = FALSE, data=dat)
 
-p2.Q4<-lmer(fresh_mass_delta ~ oxygen + (1|stock),REML = FALSE, data=dat)
+p2<-lmer(fresh_mass_delta ~ oxygen + (1|stock),REML = FALSE, data=dat)
 
-p3.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=dat)
+p3<-lmer(fresh_mass_delta ~ temperature * oxygen + (1|stock),REML = FALSE, data=dat)
 
-p4.Q4<-lmer(fresh_mass_delta ~ temperature * cell_area_delta + (1|stock),REML = FALSE, data=dat)
+p4<-lmer(fresh_mass_delta ~ temperature * cell_area_delta + (1|stock),REML = FALSE, data=dat)
 
-p5.Q4<-lmer(fresh_mass_delta ~ oxygen * cell_area_delta + (1|stock),REML = FALSE, data=dat)
+p5<-lmer(fresh_mass_delta ~ oxygen * cell_area_delta + (1|stock),REML = FALSE, data=dat)
 
-p6.Q4<-lmer(fresh_mass_delta ~ temperature * oxygen * cell_area_delta + (1|stock),REML = FALSE, data=dat)
+p6<-lmer(fresh_mass_delta ~ temperature * oxygen * cell_area_delta + (1|stock),REML = FALSE, data=dat)
 
-fit.list.table.3 <- list(p1.Q4,p2.Q4,p3.Q4,p4.Q4,p5.Q4,p6.Q4)
+fit.list.table.3 <- list(p1,p2,p3,p4,p5,p6)
 
 fit.names.table.3 <-c("temperature",
                       "oxygen",  
@@ -644,7 +73,7 @@ fit.table.3
 
 # export Table
 write.csv(fit.table.3,"4.3.1. Table 3 Model comparision cell size contribution to changes in body mass.csv",row.names = FALSE)
-summary(p6.Q4) #Table 4
+summary(p6) #Table 4
 
 # Fixed effects:
 #                                     Estimate Std. Error t value
@@ -657,7 +86,7 @@ summary(p6.Q4) #Table 4
 # oxygen:cell_area_delta              0.023594   0.052361   0.451
 # temperature:oxygen:cell_area_delta -0.001860   0.002705  -0.688
 
-Anova(p6.Q4)
+Anova(p6)
 # Response: fresh_mass_delta
 #                                       Chisq Df Pr(>Chisq)    
 # temperature                        16.2441  1  5.568e-05 ***
@@ -671,20 +100,18 @@ Anova(p6.Q4)
 ################################################################################
 # Figure 5
 ################################################################################
-#Figure based on the most informative model for each response variable. The model
-#structure consider temperature and oxygen and cell size interaction.
 {
-#pdf("4.2.3. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
-png("4.2.3. Figure 5.png",width = 10,height = 5,units = "in",res = 300)
+pdf("4.2.3. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
+#png("4.2.3. Figure 5.png",width = 10,height = 5,units = "in",res = 300)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
 
 # under hypoxia
 par(mai=c(0.82,0.82,0.2,0.2))
-visreg(p6.Q4,"cell_area_delta",by="temperature",cond=list(oxygen=10),overlay=TRUE,
+visreg(p6,"cell_area_delta",by="temperature",cond=list(oxygen=10),overlay=TRUE,
    print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab="Standardized cell area (%)", ylab="Standardized fresh mass (%)",
+       xlab="Standardised cell area (%)", ylab="Standardised fresh mass (%)",
        ylim=c(-50,50),xlim=c(-50,50),
        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
        cex.axis=1.5,cex.lab=1.5)
@@ -701,11 +128,11 @@ text(0,42.5,"hypoxic-developed flies",font=2,cex=1.5)
 
 # under normoxia
 par(mai=c(0.82,0.82,0.2,0.2))
-visreg(p6.Q4,"cell_area_delta",by="temperature",cond=list(oxygen=21),overlay=TRUE,
+visreg(p6,"cell_area_delta",by="temperature",cond=list(oxygen=21),overlay=TRUE,
        print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab="Standardized cell area (%)", ylab="Standardized fresh mass (%)",
+       xlab="Standardised cell area (%)", ylab="Standardised fresh mass (%)",
        ylim=c(-50,50),xlim=c(-50,50),
        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
        cex.axis=1.5,cex.lab=1.5)
