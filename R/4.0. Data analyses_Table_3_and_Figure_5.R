@@ -50,9 +50,9 @@ Anova(m)
 ################################################################################
 # Figure 5
 ################################################################################
-# setwd("../Outputs/")#Set directory
-# {
-# #pdf("4.2.1. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
+setwd("../Outputs/")#Set directory
+{
+pdf("4.2.1. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
 # png("4.2.1. Figure 5.png",width = 10,height = 5,units = "in",res = 600)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 
@@ -86,8 +86,8 @@ legend("bottomright", legend=c("10 kPa", "21 kPa"),
        lty = 1,lwd=4, bty="n",
        col=c("#E66101", "#00AFBB"),cex=1.4)
 
-# dev.off()
-# }
+dev.off()
+}
 ################################################################################
 #THIS IS A CAOS!!!!!
 ################################################################################
