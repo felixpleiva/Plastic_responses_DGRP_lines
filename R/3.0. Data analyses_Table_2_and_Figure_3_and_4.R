@@ -260,8 +260,8 @@ f.lme1 <- ggplot(female,aes(cell_area_log,fresh_mass_log))+
 f.lme1.plot=
     f.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     # annotate('text', x = 2.15, y = 0.225, 
@@ -280,8 +280,8 @@ f.lme3 <- ggplot(female,aes(cell_number_log,fresh_mass_log))+
 f.lme3.plot=
     f.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
         theme_bw()
@@ -298,8 +298,8 @@ f.lme5 <- ggplot(female,aes(cell_area_log,wing_area_log))+
 f.lme5.plot=
     f.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw()
 f.lme5.plot
@@ -315,8 +315,8 @@ f.lme7 <- ggplot(female,aes(cell_number_log,wing_area_log))+
 f.lme7.plot=
     f.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
 f.lme7.plot
@@ -332,8 +332,8 @@ m.lme1 <- ggplot(male,aes(cell_area_log,fresh_mass_log))+
 m.lme1.plot=
     m.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
@@ -350,8 +350,8 @@ m.lme3 <- ggplot(male,aes(cell_number_log,fresh_mass_log))+
 m.lme3.plot=
     m.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
@@ -368,8 +368,8 @@ m.lme5 <- ggplot(male,aes(cell_area_log,wing_area_log))+
 m.lme5.plot=
     m.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
 m.lme5.plot
@@ -385,8 +385,8 @@ m.lme7 <- ggplot(male,aes(cell_number_log,wing_area_log))+
 m.lme7.plot=
     m.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
 m.lme7.plot
@@ -403,8 +403,8 @@ p.lme1 <- ggplot(dat,aes(cell_area_log,fresh_mass_log))+
 p.lme1.plot=
     p.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw()
@@ -421,8 +421,8 @@ p.lme3 <- ggplot(dat,aes(cell_number_log,fresh_mass_log))+
 p.lme3.plot=
     p.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab("Fresh mass, FM (mg)") + 
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Females")+
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
@@ -440,8 +440,8 @@ p.lme5 <- ggplot(dat,aes(cell_area_log,wing_area_log))+
 p.lme5.plot=
     p.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste("Cell area, CA ","(", mu,"m"^"2",")"))) + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) + 
+    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
 p.lme5.plot
@@ -457,8 +457,8 @@ p.lme7 <- ggplot(dat,aes(cell_number_log,wing_area_log))+
 p.lme7.plot=
     p.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab("Cell number, CN") + 
-    ylab(expression(paste("Wing area, WA ","(", mu,"m"^"2",")"))) +
+    xlab(expression(paste(log[10],"[cell number]"))) + 
+    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw()
 p.lme7.plot
