@@ -32,10 +32,15 @@ if (!file.exists("../Outputs")) dir.create("../Outputs")
 # ------------------------------------------------------------------------------
 # load data
 dat<-read.csv("../Outputs/1.1.1. Data to fit the models.csv")
+
 # ------------------------------------------------------------------------------
 # filter by sex
 female=subset(dat,sex!="male")
 male=subset(dat,sex=="male")
+female2<-subset(female,female$oxygen==21&female$temperature==25)
+male2<-subset(male,male$oxygen==21&male$temperature==25)
+dat2<-subset(male,dat$oxygen==21&dat$temperature==25)
+
 # ------------------------------------------------------------------------------
 ################################################################################
 # Fitting the model with relative values of fresh mass and cell area
