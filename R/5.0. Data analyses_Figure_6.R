@@ -53,7 +53,7 @@ summary(fit1); Anova(fit1)
 setwd("../Outputs/")
 {
 #pdf("5.2.1. Figure 6.pdf",width = 10,height = 5,useDingbats = FALSE)
-png("5.2.1. Figure 6.png",width = 10,height = 5,units = "in",res = 300)
+png("5.2.1. Figure 6.png",width = 10,height = 5,units = "in",res = 600)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
 
 # under hypoxia

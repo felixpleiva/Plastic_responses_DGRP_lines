@@ -44,201 +44,60 @@ dat$sex<-as.factor(dat$sex)
 dat$ID_fly<-as.factor(dat$ID_fly)
 
 #model
-m<-lmer(fresh_mass_log ~ (temperature + oxygen) * cell_area_log + sex + (1|stock),data=dat)
-summary(m)
-Anova(m)
+fit1<-lmer(fresh_mass_log ~ temperature * cell_area_log + oxygen * cell_area_log + sex + (1|stock),REML = FALSE, data=dat)
+summary(fit1)
+Anova(fit1)
 ################################################################################
 # Figure 5
 ################################################################################
 setwd("../Outputs/")#Set directory
 {
 pdf("4.2.1. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
-# png("4.2.1. Figure 5.png",width = 10,height = 5,units = "in",res = 600)
+#png("4.2.1. Figure 5.png",width = 10,height = 5,units = "in",res = 600)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 
-# TEMPERATURE
+# under hypoxia
 par(mai=c(0.85,0.87,0.1,0.1))
-visreg(m,"cell_area_log",by="temperature",overlay=TRUE,
+visreg(fit1,"cell_area_log",by="temperature",cond=list(oxygen=10),overlay=TRUE,
        print.cond=TRUE,legend = FALSE,
-       points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.5),
-       line=list(col=c("#2c7fb8", "#de2d26"), lwd=5),
+       points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
+       line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
        xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")), 
        ylab=expression(paste(log[10],"[fresh mass (mg)]")),
        ylim=c(-0.4,0.1),xlim=c(1.9,2.4),
        cex.axis=1.2,cex.lab=1.4)
+## Draw a polygon defining an area on the graph
+xx = c(1.8815,1.8815,2.4185,2.4185)
+yy = c(0.05,0.119,0.119,0.05)
+polygon(xx,yy, col = 'grey90', border = NA)
 
 legend("bottomright", legend=c("17°C", "25°C"),
        lty = 1,lwd=4, bty="n",
        col=c("#2c7fb8", "#de2d26"),cex=1.4)
+text(2.15,0.0845,"Hypoxia (10 kPa)",font=2,cex=1.5)
 
-# OXYGEN
+# under normoxia
 par(mai=c(0.85,0.87,0.1,0.1))
-visreg(m,"cell_area_log",by="oxygen",overlay=TRUE,
+visreg(fit1,"cell_area_log",by="temperature",cond=list(oxygen=21),overlay=TRUE,
        print.cond=TRUE,legend = FALSE,
-       points=list(col=c("#E6610170", "#00AFBB70"),pch=16,cex=1.5),
-       line=list(col=c("#E66101", "#00AFBB"), lwd=5),
+       points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
+       line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
        xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")), 
        ylab=expression(paste(log[10],"[fresh mass (mg)]")),
        ylim=c(-0.4,0.1),xlim=c(1.9,2.4),
        cex.axis=1.2,cex.lab=1.4)
 
-legend("bottomright", legend=c("10 kPa", "21 kPa"),
+## Draw a polygon defining an area on the graph
+xx = c(1.8815,1.8815,2.4185,2.4185)
+yy = c(0.05,0.119,0.119,0.05)
+polygon(xx,yy, col = 'grey90', border = NA)
+legend("bottomright", legend=c("17°C", "25°C"),
        lty = 1,lwd=4, bty="n",
-       col=c("#E66101", "#00AFBB"),cex=1.4)
+       col=c("#2c7fb8", "#de2d26"),cex=1.4)
+text(2.15,0.0845,"Normoxia (21 kPa)",font=2,cex=1.5)
 
 dev.off()
 }
-################################################################################
-#THIS IS A CAOS!!!!!
-################################################################################
-LineShift<-data.frame(expand.grid(oxygen=c(10,21),
-                                  temperature=c(17,25),
-                                  LineID=levels(as.factor(dat$stock)),
-                                  sex=c("female","male")))
-LineShift$CA<-NA
-LineShift$FM<-NA
-
-for (i in 1:12){
-   LineShift$CA[i]<-aggregate(cell_area_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-   LineShift$FM[i]<-aggregate(fresh_mass_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-}
-for (i in 15:36){
-   LineShift$CA[i]<-aggregate(cell_area_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-   LineShift$FM[i]<-aggregate(fresh_mass_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-}
-for (i in 39:48){
-   LineShift$CA[i]<-aggregate(cell_area_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-   LineShift$FM[i]<-aggregate(fresh_mass_log~stock, data = subset(dat,dat$oxygen==LineShift[i,1]&dat$temperature==LineShift[i,2]&dat$sex==LineShift[i,4]&dat$stock==LineShift[i,3]),median)[1,2]
-}
-hypo<-LineShift[which(LineShift$oxygen==10),]
-names(hypo)[5:6]<-paste(names(hypo)[5:6],"hypo")
-norm<-LineShift[which(LineShift$oxygen==21),]
-names(norm)[5:6]<-paste(names(norm)[5:6],"norm")
-OxyShift<-cbind(hypo,norm)
-names(OxyShift) <- sub(" ", ".", names(OxyShift))
-
-OxyShift$CA_delta<-10^(OxyShift$CA.hypo-OxyShift$CA.norm)
-OxyShift$FM_delta<-10^(OxyShift$FM.hypo-OxyShift$FM.norm)
-OxyShift$CN_delta<-10^((OxyShift$FM.hypo-OxyShift$FM.norm)-(OxyShift$CA.hypo-OxyShift$CA.norm))
-a1<-mean(na.omit(OxyShift$CA_delta))-1
-b1<-mean(na.omit(OxyShift$FM_delta))-1
-c1<-mean(na.omit(OxyShift$CN_delta))-1
-barplot(100*c(a1,c1,b1),main="% of change from normoxia to hypoxia",col=c("green","orange","brown"),ylim=c(-40,75))
-legend("bottomright",c("cell area","cell number","freshmass"),fill=c("green","orange","brown"))
-
-summary(lm(FM_delta~CA.norm+temperature,data=OxyShift))# large cell size does not buffers from changes in body mass?
-summary(n<-lm(FM_delta~CA_delta+temperature,data=OxyShift))# changes in cell size lead to  changes in body mass?
-visreg(n,"CA_delta",by="temperature",overlay=T,ylab="FM_delta",main="changes from norm to hypo")
-abline(h=1,v=1,lty=2)
-summary(n<-lm(FM_delta~CN_delta+temperature,data=OxyShift))# changes in cell number do not lead to  changes in body mass?
-visreg(n,"CN_delta",by="temperature",overlay=T,ylab="FM_delta",main="changes from norm to hypo")
-abline(h=1,v=1,lty=2)
-summary(n<-lm(CA_delta~CN_delta+temperature,data=OxyShift))# decreases in  cell size are buffered by increases in cell number?
-visreg(n,"CN_delta",by="temperature",overlay=T,ylab="CV_delta",main="changes from norm to hypo")
-abline(h=1,v=1,lty=2)
-cool<-LineShift[which(LineShift$temperature==17),]
-names(cool)[5:6]<-paste(names(cool)[5:6],"cool")
-warm<-LineShift[which(LineShift$temperature==25),]
-names(warm)[5:6]<-paste(names(warm)[5:6],"warm")
-TShift<-cbind(warm,cool)
-names(TShift) <- sub(" ", ".", names(TShift))
-
-TShift$CA_delta<-10^(TShift$CA.warm-TShift$CA.cool)
-TShift$FM_delta<-10^(TShift$FM.warm-TShift$FM.cool)
-TShift$CN_delta<-10^((TShift$FM.warm-TShift$FM.cool)-(TShift$CA.warm-TShift$CA.cool))
-a2<-mean(na.omit(TShift$CA_delta))-1
-b2<-mean(na.omit(TShift$FM_delta))-1
-c2<-mean(na.omit(TShift$CN_delta))-1
-barplot(100*c(a2,c2,b2),main="%change from cool to warm",col=c("green","orange","brown"),ylim=c(-40,75))
-legend("bottomright",c("cell area","cell number","freshmass"),fill=c("green","orange","brown"))
-summary(lm(FM_delta~CA.cool,data=TShift))# cell size does not affect changes in body mass?
-summary(n<-lm(FM_delta~CA_delta+oxygen,data=TShift))# changes in cell size do not lead to  changes in body mass?
-visreg(n,"CA_delta",by="oxygen",overlay=T,ylab="FM_delta",main="changes from cool to warm")
-abline(h=1,v=1,lty=2)
-summary(n<-lm(FM_delta~CN_delta+oxygen,data=TShift))# changes in cell number do lead to  changes in body mass?
-visreg(n,"CN_delta",by="oxygen",overlay=T,ylab="FM_delta",main="changes from cool to warm")
-abline(h=1,v=1,lty=2)
-summary(n<-lm(CA_delta~CN_delta+oxygen,data=TShift))# decreases in  cell size are buffered by increases in cell number?
-visreg(n,"CN_delta",by="oxygen",overlay=T,ylab="CV_delta",main="changes from cool to warm")
-abline(h=1,v=1,lty=2)
-
-m<-lmer(fresh_mass_log~cell_area_log*(oxygen+temperature)+sex+(1|stock),data=dat)
-visreg(m,"cell_area_log",by= "oxygen",overlay=T,ylim=c(-0.3,0.2),cond=list(sex="male"))
-abline(a=-7.3,b=1,col="#00000060",lty=2,lwd=2)
-
-for (i in 1:6){
-   colortype<-c("red","red","blue","purple","blue","purple")
-   bgcol<-c("red","white","blue","purple","white","white")
-   j<-i*2-1
-   points(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),col=colortype[i],lwd=2)
-   j<-j+1
-   points(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),col=colortype[i],lty=2,lwd=2)
-}
-
-visreg(m,"cell_area_log",by= "oxygen",overlay=T,ylim=c(-0.4,0.2),cond=list(sex="female"))
-abline(a=-7.3,b=1,col="#00000060",lty=2,lwd=2)
-
-for (i in 1:6){
-   colortype<-c("red","red","blue","purple","blue","purple")
-   bgcol<-c("red","white","blue","purple","white","white")
-   j<-i*2-1+12
-   points(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),col=colortype[i],lwd=2)
-   j<-j+1
-   points(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(OxyShift$CA.norm[j],OxyShift$CA.hypo[j]),c(OxyShift$FM.norm[j],OxyShift$FM.hypo[j]),col=colortype[i],lty=2,lwd=2)
-}
-legend("bottomright",c("median normoxia","median hypoxia","large","medium","small","17C","25C"),pch=c(21,25,NA,NA,NA,NA,NA),
-       lty=c(NA,NA,1,1,1,1,2),lwd=2,col=c("black","black","blue","purple","red","black","black"),bty="n")
-
-visreg(m,"cell_area_log",by= "temperature",overlay=T,ylim=c(-0.3,0.2),cond=list(sex="male"))
-abline(a=-7.3,b=1,col="#00000060",lty=2,lwd=2)
-
-for (i in 1:6){
-   colortype<-c("red","red","blue","purple","blue","purple")
-   bgcol<-c("red","white","blue","purple","white","white")
-   j<-i*2-1
-   points(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),col=colortype[i],lty=2,lwd=2)
-   j<-j+1
-   points(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),col=colortype[i],lwd=2)
-}
-
-visreg(m,"cell_vol_log",by= "temperature",overlay=T,ylim=c(-0.3,0.2),cond=list(sex="female"))
-abline(a=-7.3,b=1,col="#00000060",lty=2,lwd=2)
-
-for (i in 1:6){
-   colortype<-c("red","red","blue","purple","blue","purple")
-   bgcol<-c("red","white","blue","purple","white","white")
-   j<-i*2-1+12
-   points(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),col=colortype[i],lty=2,lwd=2)
-   j<-j+1
-   points(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),pch=c(21,25),col=colortype[i],bg=bgcol[i])
-   lines(c(TShift$CV.cool[j],TShift$CV.warm[j]),c(TShift$FM.cool[j],TShift$FM.warm[j]),col=colortype[i],lwd=2)
-}
-legend("bottomright",c("median cool","median warm","large","medium","small","normoxia","hypoxia"),pch=c(21,25,NA,NA,NA,NA,NA),
-       lty=c(NA,NA,1,1,1,1,2),lwd=2,col=c("black","black","blue","purple","red","black","black"),bty="n")
-
-
-
-#Changes in cell size and number similar between males and females of the same line
-#Changes in cell size more pronounced due to oxygen or temperature?
-#Contribution of cell size changes to body size changes in percentages for each line and sex for either temperautre or oxygen
-#Is the variability greater in the cold and related to cell size?
-
-10^(log10(150)-log10(100))
-
-10^(log10(100)-log10(150))
-
-m<-lm(fresh_mass_log~cell_area_log+oxygen*temperature+sex,data=dat)
-m<-lm(fresh_mass_log~cell_area_log+CScat*oxygen*temperature+sex,data=dat)
-m<-lm(fresh_mass_log~(cell_area_log+sex)*(oxygen+temperature)+sex,data=dat)
-m<-lm(fresh_mass_log~(cell_area_log+cell_area_log:CScat)*(oxygen+temperature)+sex,data=dat)
-m<-lm(fresh_mass_log~cell_area_log+CScat:(oxygen+temperature)+sex,data=dat)
 # ------------------------------------------------------------------------------
 # saving session information with all packages versions for reproducibility purposes
 sink("../Outputs/4.1.1. Data analyses_Tables_3_4_and_Figure_5_R_session.txt")

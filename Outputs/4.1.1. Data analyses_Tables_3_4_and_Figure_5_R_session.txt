@@ -14,8 +14,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] AICcmodavg_2.3-1 visreg_2.7.0     car_3.0-11       carData_3.0-4   
-[5] lme4_1.1-27.1    Matrix_1.3-3    
+[1] AICcmodavg_2.3-1 visreg_2.7.0     car_3.0-11       carData_3.0-4    lme4_1.1-27.1   
+[6] Matrix_1.3-3    
 
 loaded via a namespace (and not attached):
  [1] tinytex_0.33      xfun_0.24         splines_4.1.0     haven_2.4.3      
@@ -25,7 +25,7 @@ loaded via a namespace (and not attached):
 [17] readxl_1.3.1      lifecycle_1.0.0   plyr_1.8.6        cellranger_1.1.0 
 [21] raster_3.4-13     zip_2.2.0         VGAM_1.1-5        codetools_0.2-18 
 [25] evaluate_0.14     knitr_1.34        rio_0.5.27        forcats_0.5.1    
-[29] curl_4.3.2        parallel_4.1.0    fansi_0.5.0       Rcpp_1.0.7       
+[29] parallel_4.1.0    curl_4.3.2        fansi_0.5.0       Rcpp_1.0.7       
 [33] xtable_1.8-4      unmarked_1.1.1    abind_1.4-5       hms_1.1.0        
 [37] digest_0.6.27     stringi_1.6.2     openxlsx_4.2.4    grid_4.1.0       
 [41] tools_4.1.0       magrittr_2.0.1    tibble_3.1.2      crayon_1.4.1     
