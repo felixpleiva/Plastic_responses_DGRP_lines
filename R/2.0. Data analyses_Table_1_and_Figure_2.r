@@ -38,6 +38,33 @@ dat<-read.csv("../Outputs/1.1.1. Data to fit the models.csv")
 str(dat)
 dat$sex<-as.factor(dat$sex)
 ################################################################################
+# Test the influence of the random structure
+################################################################################
+# Modelling the random effect structure on fresh mass
+lm.fm<-gls(fresh_mass_log ~ 1,data=dat, method = "REML")
+lme.fm.i<-lme(fresh_mass_log ~ 1,random=~1|stock,data=dat,method = "REML")
+lme.fm.s<-lme(fresh_mass_log ~ 1,random=~1 + stock |stock,data=dat,method = "REML")
+
+anova(lm.fm,lme.fm.i)# Having "stock" as random effect in the intercept is more informative.
+anova(lme.fm.i,lme.fm.s)# Having "stock" as random effect in the intercept and slope do not helps
+
+# Modelling the random effect structure on wing area
+lm.wa<-gls(wing_area_log ~ 1,data=dat, method = "REML")
+lme.wa.i<-lme(wing_area_log ~ 1,random=~1|stock,data=dat,method = "REML")
+lme.wa.s<-lme(wing_area_log ~ 1,random=~1 + stock |stock,data=dat,method = "REML")
+
+anova(lm.wa,lme.wa.i)# Having "stock" as random effect in the intercept is more informative.
+anova(lme.wa.i,lme.wa.s)# Having "stock" as random effect in the intercept and slope do not helps
+
+# Modelling the random effect structure on cell area
+lm.ca<-gls(cell_area_log ~ 1,data=dat, method = "REML")
+lme.ca.i<-lme(cell_area_log ~ 1,random=~1|stock,data=dat,method = "REML")
+lme.ca.s<-lme(cell_area_log ~ 1,random=~1 + stock |stock,data=dat,method = "REML")
+
+anova(lm.ca,lme.ca.i)# Having "stock" as random effect in the intercept is more informative.
+anova(lme.ca.i,lme.ca.s)# Having "stock" as random effect in the intercept and slope is less informative
+
+################################################################################
 # Does cell size category affect temperature-and-oxygen dependence of body size
 # related traits?
 ################################################################################
@@ -49,6 +76,7 @@ m4<-lmer(fresh_mass_log ~ temperature * oxygen +  sex + (1|stock),REML = FALSE, 
 m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock),REML = FALSE, data=dat)
 m6<-lmer(fresh_mass_log ~ temperature * cell_area_cat +  sex + (1|stock),REML = FALSE, data=dat)
 m7<-lmer(fresh_mass_log ~ oxygen * cell_area_cat +  sex + (1|stock),REML = FALSE, data=dat)
+
 
 # wing area
 w1<-lmer(wing_area_log ~ temperature + sex + (1|stock),REML = FALSE, data=dat)
@@ -119,7 +147,6 @@ fit.names.table.1.c <-c("temp + sex",
 fit.table.1.c<-aictab(fit.list.table.1.c,fit.names.table.1.c, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
 fit.table.1.c
 
-
 setwd("../Outputs/")#Set directory
 
 
@@ -128,12 +155,65 @@ write.csv(fit.table.1.m,"2.3.1. Table_1_Model_comparison_for_body_mass.csv",row.
 write.csv(fit.table.1.w,"2.3.2. Table_1_Model_comparison_for_wing_area.csv",row.names = FALSE)
 write.csv(fit.table.1.c,"2.3.3. Table_1_Model_comparison_for_cell_area.csv",row.names = FALSE)
 
+#-------------------------------------------------------------------------------
+# Summary Tables of the best models
+#-------------------------------------------------------------------------------
+# fresh mass
+m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(m5,test.statistic="F")
+summary(m5)
+
+# wing area
+w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(w5,test.statistic="F")
+summary(w5)
+
+# cell area
+c5<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(c5,test.statistic="F")
+summary(c5)
+#-------------------------------------------------------------------------------
+# Test more complex structures on the most informative model
+#-------------------------------------------------------------------------------
+# fresh mass
+m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+m5.a<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature), data=dat)
+m5.b<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen),data=dat)
+m5.c<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
+m5.d<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen),data=dat)
+# we see several models DO NOT converges, but one of them does (model m5.c).
+anova(m5,m5.c) 
+# more complex random structures does not help to explain the variation fresh mass
+
+# wing area
+w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+w5.a<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature), data=dat)
+w5.b<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen), data=dat)
+w5.c<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
+w5.d<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen), data=dat)
+# we see several models DO NOT converges, but one of them does (model w5.c).
+anova(w5,w5.c) 
+# more complex random structures does not help to explain the variation wing area
+
+# cell area
+c5<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+c5.a<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature), data=dat)
+c5.b<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen), data=dat)
+c5.c<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
+c5.d<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen), data=dat)
+# One model DO NOT converges (model c5.c), the rest does.
+anova(c5,c5.a) 
+anova(c5,c5.b) 
+anova(c5,c5.d) 
+
+# more complex random structures does not help to explain the variation cell area
+
 ################################################################################
 # Figure 2
 ################################################################################
 {
-pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
-#png("2.2.1. Figure 2.png",width = 7,height = 10,units = "in",res = 600)
+#pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
+png("2.2.1. Figure 2.png",width = 7,height = 10,units = "in",res = 600)
 par(mfrow=c(3,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 #-------------------------------------------------------------------------------
 #Fresh mass
@@ -152,6 +232,7 @@ legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
 
 
 par(mai=c(0.85,0.82,0,0))
@@ -169,6 +250,7 @@ legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(b)"), cex=1.4,bty="n")
 #-------------------------------------------------------------------------------
 #Wing area
 
@@ -187,7 +269,7 @@ legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
-
+legend("topleft", legend=c("(c)"), cex=1.4,bty="n")
 
 par(mai=c(0.85,0.85,0,0))
 visreg(w5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
@@ -204,6 +286,7 @@ legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(d)"), cex=1.4,bty="n")
 #-------------------------------------------------------------------------------
 #Cell area
 
@@ -222,7 +305,7 @@ legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
-
+legend("topleft", legend=c("(e)"), cex=1.4,bty="n")
 
 par(mai=c(0.85,0.82,0,0))
 visreg(c5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
@@ -239,6 +322,7 @@ legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(f)"), cex=1.4,bty="n")
 dev.off()
 }
 # ------------------------------------------------------------------------------

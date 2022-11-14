@@ -204,45 +204,84 @@ AIC(p.lme7,p.lme8);anova(p.lme7,p.lme8)
 # ------------------------------------------------------------------------------
 # Females fresh mass
 f.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE, data=female)
-AIC(f.lme1);logLik(f.lme1) 
 
 f.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-AIC(f.lme3);logLik(f.lme3)
+
+fit.list.table.2.f <- list(f.lme1,f.lme3)
+fit.names.table.2.f <-c("fresh mass ~ cell area",
+                        "fresh mass ~ cell number")
+
+#compare by using AICc
+fit.table.2.f<-aictab(fit.list.table.2.f,fit.names.table.2.f, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.f
 
 # Females wing area
 f.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=female)
-AIC(f.lme5);logLik(f.lme5)
 
 f.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
-AIC(f.lme7);logLik(f.lme7)
+
+fit.list.table.2.w <- list(f.lme5,f.lme7)
+fit.names.table.2.w <-c("wing area ~ cell area",
+                        "wing area ~ cell number")
+
+#compare by using AICc
+fit.table.2.w<-aictab(fit.list.table.2.w,fit.names.table.2.w, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.w
 
 # Males fresh mass
 m.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=male)
-summary(m.lme1);AIC(m.lme1);logLik(m.lme1)
 
 m.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-AIC(m.lme3);logLik(m.lme3)
+
+fit.list.table.2.f <- list(m.lme1,m.lme3)
+fit.names.table.2.f <-c("fresh mass ~ cell area",
+                        "fresh mass ~ cell number")
+
+#compare by using AICc
+fit.table.2.f<-aictab(fit.list.table.2.f,fit.names.table.2.f, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.f
+
 
 # Males wing area
 m.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=male)
-AIC(m.lme5);logLik(m.lme5)
 
 m.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
-AIC(m.lme7);logLik(m.lme7)
+
+fit.list.table.2.w <- list(m.lme5,m.lme7)
+fit.names.table.2.w <-c("wing area ~ cell area",
+                        "wing area ~ cell number")
+
+#compare by using AICc
+fit.table.2.w<-aictab(fit.list.table.2.w,fit.names.table.2.w, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.w
+
 
 # Sex pooled fresh mass
 p.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
-AIC(p.lme1);logLik(p.lme1)
 
 p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
-AIC(p.lme3);logLik(p.lme3)
+
+fit.list.table.2.f <- list(p.lme1,p.lme3)
+fit.names.table.2.f <-c("fresh mass ~ cell area",
+                        "fresh mass ~ cell number")
+
+#compare by using AICc
+fit.table.2.f<-aictab(fit.list.table.2.f,fit.names.table.2.f, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.f
+
 
 # Sex pooled wing area
-p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
-AIC(p.lme5);logLik(p.lme5)
+p.lme5<-lmer(wing_area_log ~ cell_area_log + (1|stock),REML = TRUE,data=dat)
 
-p.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
-AIC(p.lme7);logLik(p.lme7)
+p.lme7<-lmer(wing_area_log ~ cell_number_log + (1|stock),REML = TRUE,data=dat)
+
+fit.list.table.2.w <- list(p.lme5,p.lme7)
+fit.names.table.2.w <-c("wing area ~ cell area",
+                        "wing area ~ cell number")
+
+#compare by using AICc
+fit.table.2.w<-aictab(fit.list.table.2.w,fit.names.table.2.w, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
+fit.table.2.w
 
 # ------------------------------------------------------------------------------
 # Figure 3 and Figure 4
