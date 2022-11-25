@@ -1,0 +1,102 @@
+-------------------------------------------------------------------------------
+#### The role of cell size in shaping responses to oxygen and temperature #####
+				in fruit flies 
+-------------------------------------------------------------------------------
+Cite the repository as:
+
+Leiva FP, Boerrigter JGJ & Verberk WCEP. (2022). Draft version of paper data and code of manuscript: The role of cell size in shaping responses to oxygen and temperature in fruit flies (1.0). Zenodo. https://doi.org/10.5281/zenodo.5949048.
+
+For any further information or to notify the author if errors are identified in the data or script, please contact Félix P. Leiva (felixpleiva@gmail.com)
+-------------------------------------------------------------------------------
+### metadata for body size related traits 20191122.xlsx ###
+
+Data on body size related traits of six DGRP lines after one generation of development at two oxygen and two temperature conditions
+
+columnHeading		description
+-------------		-----------
+generation		Indicate number of generations of development at a given temperature and oxygen
+stock			Stock ID as in Bloomington Stock Center
+temperature		Developmental temperature in Celcius degrees
+oxygen 			Developmental oxygen in Celcius degrees
+plate			Label of the 96-well plate to store the flies
+well			Indicate the well ID
+sex			Sex of the experimental individuals (male, female) 
+fresh_mass              Individual fresh mass in miligrams
+fw_date			Date of fresh mass measurement
+sorting_date		Date of females and males sorting
+notes 			Relevant notes by the researcher
+left_or_right		Indicate the side of wing used to measure the traits (left; right)
+wing_area		Wing area in squared micrometers
+counting_area		Area, in aquared micrometers, to counting the number of trichomes
+trichomes_number  	Number of trichromes in the counting area
+picture_date		Date of wings picture
+----------------------------------------------------------------------------
+### metadata for 1.1.1. Data to fit the models.csv ###
+
+Data outputs of the scriot "1.0. Data wrangling.R"
+
+columnHeading		description
+-------------		-----------
+stock			Stock ID as in Bloomington Stock Center
+temperature		Developmental temperature in Celcius degrees
+oxygen 			Developmental oxygen in Celcius degrees
+sex			Sex of the experimental individuals (male, female) 
+fresh_mass              Individual fresh mass in miligrams
+wing_area		Wing area in squared micrometers
+ID_fly			Identifier of a individual
+cell_area		Cell area in squared micrometers
+cell_number		Number of cells in the wing
+cell_area_log		Log in base 10 of cell area, in squared micrometers
+cell_number_log		Log in base 10 of cell number
+wing_area_log		Log in base 10 of wing area, in squared micrometers
+fresh_mass_log		Log in base 10 of fresh mass, in milligrams
+cell_area_cat		Category of cell size (small, medium and large)
+cell_area_delta		Change relative in cell area, in percentage, in relation to the control condition (21 kPa and 25°C)
+fresh_mass_delta	Change relative in fresh mass, in percentage, in relation to the control condition (21 kPa and 25°C)
+wing_area_delta		Change relative in wing area, in percentage, in relation to the control condition (21 kPa and 25°C)
+
+----------------------------------------------------------------------------
+### metadata for 2.3.1. Table_1_Model_comparison_for_body_mass.csv ###
+
+Data output of the R script "2.0. Data analyses_Table_1_and_Figure_2.R"
+
+columnHeading		description
+-------------		-----------
+Modnames		Model name
+K			Number of parameters
+AICc			Corrected Akaike's information criterion
+Delta_AICc		Difference in AICc with respect to the model with highest support
+ModelLik		Likelihood of the model
+AICcWt			Akaike's weight
+LL			Log-Likelihood of the model
+Cum.Wt			Cummulative sum of the Akaike's weights
+----------------------------------------------------------------------------
+### metadata for 2.3.2. Table_1_Model_comparison_for_wing_area.csv ###
+
+Data output of the R script "2.0. Data analyses_Table_1_and_Figure_2.R"
+
+columnHeading		description
+-------------		-----------
+Modnames		Model name
+K			Number of parameters
+AICc			Corrected Akaike's information criterion
+Delta_AICc		Difference in AICc with respect to the model with highest support
+ModelLik		Likelihood of the model
+AICcWt			Akaike's weight
+LL			Log-Likelihood of the model
+Cum.Wt			Cummulative sum of the Akaike's weights
+----------------------------------------------------------------------------
+### metadata for 2.3.3. Table_1_Model_comparison_for_cell_area.csv ###
+
+Data output of the R script "2.0. Data analyses_Table_1_and_Figure_2.R"
+
+columnHeading		description
+-------------		-----------
+Modnames		Model name
+K			Number of parameters
+AICc			Corrected Akaike's information criterion
+Delta_AICc		Difference in AICc with respect to the model with highest support
+ModelLik		Likelihood of the model
+AICcWt			Akaike's weight
+LL			Log-Likelihood of the model
+Cum.Wt			Cummulative sum of the Akaike's weights

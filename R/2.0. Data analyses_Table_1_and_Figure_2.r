@@ -24,6 +24,8 @@ library(dplyr)
 library(car)
 library(visreg)
 library(AICcmodavg)
+library(nlme)
+library(lattice)
 # ------------------------------------------------------------------------------
 # create a folder for the outputs produced by running this script (if it doesn't
 # already exist)
@@ -147,6 +149,8 @@ fit.names.table.1.c <-c("temp + sex",
 fit.table.1.c<-aictab(fit.list.table.1.c,fit.names.table.1.c, second.ord = T,sort = TRUE, digits = 3, LL=TRUE)
 fit.table.1.c
 
+# Summary Tables of the best models to be included as supplementary information
+
 setwd("../Outputs/")#Set directory
 
 
@@ -156,23 +160,6 @@ write.csv(fit.table.1.w,"2.3.2. Table_1_Model_comparison_for_wing_area.csv",row.
 write.csv(fit.table.1.c,"2.3.3. Table_1_Model_comparison_for_cell_area.csv",row.names = FALSE)
 
 #-------------------------------------------------------------------------------
-# Summary Tables of the best models
-#-------------------------------------------------------------------------------
-# fresh mass
-m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
-Anova(m5,test.statistic="F")
-summary(m5)
-
-# wing area
-w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
-Anova(w5,test.statistic="F")
-summary(w5)
-
-# cell area
-c5<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
-Anova(c5,test.statistic="F")
-summary(c5)
-#-------------------------------------------------------------------------------
 # Test more complex structures on the most informative model
 #-------------------------------------------------------------------------------
 # fresh mass
@@ -181,9 +168,15 @@ m5.a<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|sto
 m5.b<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen),data=dat)
 m5.c<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
 m5.d<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen),data=dat)
-# we see several models DO NOT converges, but one of them does (model m5.c).
-anova(m5,m5.c) 
-# more complex random structures does not help to explain the variation fresh mass
+m5.e<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (cell_area_cat|stock),data=dat)
+m5.f<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (cell_area_cat|stock),data=dat)
+m5.g<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1+ cell_area_cat|stock),data=dat)
+
+# we see several models DO NOT converges, but two of them does (model m5.c and m5.e and m5.g).
+anova(m5.c,m5.e)
+anova(m5.c,m5.g)
+anova(m5,m5.c)
+# more complex random structures does not help to explain the variation in fresh mass
 
 # wing area
 w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
@@ -191,9 +184,14 @@ w5.a<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stoc
 w5.b<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen), data=dat)
 w5.c<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
 w5.d<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen), data=dat)
-# we see several models DO NOT converges, but one of them does (model w5.c).
-anova(w5,w5.c) 
-# more complex random structures does not help to explain the variation wing area
+w5.e<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (cell_area_cat|stock),data=dat)
+w5.f<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (cell_area_cat|stock),data=dat)
+w5.g<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1+ cell_area_cat|stock),data=dat)
+
+# we see several models DO NOT converges, but one of them does (model w5.c and w5.f).
+anova(w5.c,w5.f)
+anova(w5,w5.c)
+# more complex random structures does not help to explain the variation in wing area
 
 # cell area
 c5<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
@@ -201,21 +199,55 @@ c5.a<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stoc
 c5.b<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen), data=dat)
 c5.c<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
 c5.d<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen), data=dat)
-# One model DO NOT converges (model c5.c), the rest does.
-anova(c5,c5.a) 
-anova(c5,c5.b) 
-anova(c5,c5.d) 
+c5.e<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (cell_area_cat|stock),data=dat)
+c5.f<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (cell_area_cat|stock),data=dat)
+c5.g<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1+ cell_area_cat|stock),data=dat)
 
-# more complex random structures does not help to explain the variation cell area
+# Two models DO NOT converges (model c5.e and c5.g), the rest does.
+anova(c5,c5.a)
+anova(c5,c5.b)
+anova(c5,c5.c)
+anova(c5,c5.d)
+anova(c5,c5.f)
+
+# More complex random structures does not help to explain the variation in cell area
+#-------------------------------------------------------------------------------
+# Summary Tables of the best models
+#-------------------------------------------------------------------------------
+# fresh mass
+m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(m5,test.statistic="F")
+summary(m5)
+coef_m<-coef(m5)
+dotplot(ranef(m5,condVar=TRUE))
+
+# wing area
+w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(w5,test.statistic="F")
+summary(w5)
+coef_w<-coef(w5)
+dotplot(ranef(w5,condVar=TRUE))
+
+# cell area
+c5<-lmer(cell_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+Anova(c5,test.statistic="F")
+summary(c5)
+coef_c<-coef(c5)
+dotplot(ranef(c5,condVar=TRUE))
 
 ################################################################################
 # Figure 2
+setwd("../Outputs/")#Set directory
 ################################################################################
 {
-#pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
-png("2.2.1. Figure 2.png",width = 7,height = 10,units = "in",res = 600)
+pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
+#png("2.2.1. Figure 2.png",width = 7,height = 10,units = "in",res = 600)
 par(mfrow=c(3,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 #-------------------------------------------------------------------------------
+# labels
+labs= c("0.4","0.6","0.8","1.0","1.2")
+xs= log10(c(0.4,0.6,0.8,1.0,1.2))
+
 #Fresh mass
 par(mai=c(0.85,0.82,0,0))
 visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
@@ -223,10 +255,18 @@ visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
            points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
            line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
            xlab="Temperature (°C)", 
-           ylab=expression(paste(log[10],"[fresh mass (mg)]")),
-           ylim=c(-0.4,0.1),xlim=c(14,28),
+           #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+           ylab="Fresh mass (mg)",
+           yaxt="n",
+           xaxt="n",
+           ylim=c(-0.4,0.1),
+           xlim=c(14,28),
            cex.axis=1.2,cex.lab=1.4)
-
+abline(int_25180,)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
 # Add a legend
 legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
 legend("bottomleft", legend=c("large", "medium","small"),
@@ -234,16 +274,23 @@ legend("bottomleft", legend=c("large", "medium","small"),
        col=c('#B8860B', '#6495ED','#B2ABD2'))
 legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
 
-
 par(mai=c(0.85,0.82,0,0))
 visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
        print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
        points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
        line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
        xlab="Temperature (°C)", 
-       ylab=expression(paste(log[10],"[fresh mass (mg)]")),
-       ylim=c(-0.4,0.1),xlim=c(14,28),
+       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+       ylab="Fresh mass (mg)",
+       yaxt="n",
+       xaxt="n",
+       ylim=c(-0.4,0.1),
+       xlim=c(14,28),
        cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
 
 # Add a legend
 legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
@@ -253,6 +300,9 @@ legend("bottomleft", legend=c("large", "medium","small"),
 legend("topleft", legend=c("(b)"), cex=1.4,bty="n")
 #-------------------------------------------------------------------------------
 #Wing area
+# labels
+labs= c("5","7.5","10","12.5","15")
+xs= log10(c(500000,750000,1000000,1250000,1500000))
 
 par(mai=c(0.85,0.82,0,0))
 visreg(w5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
@@ -260,9 +310,17 @@ visreg(w5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
        points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
        line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
        xlab="Temperature (°C)", 
-       ylab=expression(paste(log[10], "[wing area (",mu, m^2,")]")),
-       ylim=c(5.7,6.2),xlim=c(14,28),
+       #ylab=expression(paste(log[10], "[wing area (",mu, m^2,")]")),
+       ylab=expression(paste("Wing area (",mu, m^2,"× 100,000)")),
+       yaxt="n",
+       xaxt="n",
+       ylim=c(5.7,6.2),
+       xlim=c(14,28),
        cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
 
 # Add a legend
 legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
@@ -277,9 +335,17 @@ visreg(w5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
        points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
        line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
        xlab="Temperature (°C)", 
-       ylab=expression(paste(log[10], "[wing area (",mu, m^2,")]")),
-       ylim=c(5.7,6.2),xlim=c(14,28),
+       #ylab=expression(paste(log[10], "[wing area (",mu, m^2,")]")),
+       ylab=expression(paste("Wing area (",mu, m^2,"× 100,000)")),
+       yaxt="n",
+       xaxt="n",
+       ylim=c(5.7,6.2),
+       xlim=c(14,28),
        cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
 
 # Add a legend
 legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
@@ -289,6 +355,8 @@ legend("bottomleft", legend=c("large", "medium","small"),
 legend("topleft", legend=c("(d)"), cex=1.4,bty="n")
 #-------------------------------------------------------------------------------
 #Cell area
+labs= c("80","105","135","170","220")
+xs= log10(c(80,105,135,170,220))
 
 par(mai=c(0.85,0.82,0,0))
 visreg(c5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
@@ -296,9 +364,17 @@ visreg(c5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
        points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
        line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
        xlab="Temperature (°C)", 
-       ylab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
-       ylim=c(1.9,2.4),xlim=c(14,28),
+       #ylab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
+       ylab=expression(paste("Cell area (",mu, m^2,")")),
+       yaxt="n",
+       xaxt="n",
+       ylim=c(1.9,2.4),
+       xlim=c(14,28),
        cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
 
 # Add a legend
 legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
@@ -313,9 +389,18 @@ visreg(c5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
        points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
        line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
        xlab="Temperature (°C)", 
-       ylab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
-       ylim=c(1.9,2.4),xlim=c(14,28),
+       #ylab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
+       ylab=expression(paste("Cell area (",mu, m^2,")")),
+       yaxt="n",
+       xaxt="n",
+       ylim=c(1.9,2.4),
+       xlim=c(14,28),
        cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
+
 
 # Add a legend
 legend("top", legend=c("Normoxia (21 kPa)"), cex=1.4,bty="n")
@@ -331,6 +416,84 @@ sink("../Outputs/2.1.1. Data analyses_Table_1_and_Figure_2_R_session.txt")
 sessionInfo()
 sink()
 # ------------------------------------------------------------------------------
+m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+coef_m<-coef(m5)
+fixed_effects_mass <- fixed.effects(m5)
+stock_id<-unique(as.factor(paste(dat$stock,dat$cell_area_cat)))
+
+stock_id
+# 25180 small  
+# 25182 small  
+# 28141 medium
+# 28247 medium
+# 28196 large
+# 25203 large    
+
+# Extract intercepts per stock
+int_25180 <- coef_m$stock[1,1] 
+int_25182 <- coef_m$stock[2,1] 
+int_25203 <- coef_m$stock[3,1] 
+int_28141 <- coef_m$stock[4,1] 
+int_28196 <- coef_m$stock[5,1] 
+int_28247 <- coef_m$stock[6,1]
+
+# Extract slopes
+int_25180 <- coef_m$stock[1,1] 
+int_25182 <- coef_m$stock[2,1] 
+int_25203 <- coef_m$stock[3,1] 
+int_28141 <- coef_m$stock[4,1] 
+int_28196 <- coef_m$stock[5,1] 
+int_28247 <- coef_m$stock[6,1]
+
+# extract intercept and slopes estimates of the best model for fresh mass 
+int                                     <- fixed.effects(m5[])   
+int                                     <- 0.3116174421
+temp                                    <- -0.0128956159
+oxy                                     <- -0.0057667027
+cell_area_catmedium                     <-  0.0931448727     
+cell_area_catsmall                      <- -0.0574583153                 
+sexmale                                 <- -0.1681601788 
+temperature:oxygen                      <-  0.0004306600                   
+temperature:cell_area_catmedium        <- -0.0083656991                        
+temperature:cell_area_catsmall          <- -0.0032143579                        
+oxygen:cell_area_catmedium              <- -0.0123560491
+temperature:oxygen:cell_area_catmedium  <- 0.0006402856
+oxygen:cell_area_catsmall               <- -0.0060958922     
+temperature:oxygen:cell_area_catsmall   <- 0.00040292
+ 
+                            
+ 
+
+
+# labels
+labs= c("0.4","0.6","0.8","1.0","1.2")
+xs= log10(c(0.4,0.6,0.8,1.0,1.2))
+
+#Fresh mass
+par(mai=c(0.85,0.82,0,0))
+visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
+       print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
+       points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
+       line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
+       xlab="Temperature (°C)", 
+       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+       ylab="Fresh mass (mg)",
+       yaxt="n",
+       xaxt="n",
+       ylim=c(-0.4,0.1),
+       xlim=c(14,28),
+       cex.axis=1.2,cex.lab=1.4)
+
+#update axis
+axis(1,at=c(17,25), 
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
+# Add a legend
+legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
+legend("bottomleft", legend=c("large", "medium","small"),
+       lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
+       col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
 ################################################################################
 ############################ END OF SCRIPT #####################################
 ################################################################################
