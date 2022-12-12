@@ -238,9 +238,55 @@ dotplot(ranef(c5,condVar=TRUE))
 ################################################################################
 # Figure 2
 setwd("../Outputs/")#Set directory
-################################################################################
-{
-pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
+
+# Extract general and random intercepts for fresh mass model
+m_inter_general <- summary(m5)$coefficients[1, 1]
+m_int_25180     <- coef_m$stock[1,1]# small
+m_int_25182     <- coef_m$stock[2,1]# small
+m_int_28141     <- coef_m$stock[4,1]# medium
+m_int_28247     <- coef_m$stock[6,1]# medium
+m_int_28196     <- coef_m$stock[5,1]# large
+m_int_25203     <- coef_m$stock[3,1]# large
+
+# Extract slopes per predictor for fresh mass model
+m_slope_temp     <- summary(m5)$coefficients[2, 1]
+m_slope_oxy      <- summary(m5)$coefficients[3, 1]
+m_slope_sex      <- summary(m5)$coefficients[6, 1]
+m_slope_temp_oxy <- summary(m5)$coefficients[7, 1]
+
+
+# Extract general and random intercepts for wing area model
+w_inter_general <- summary(w5)$coefficients[1, 1]
+w_int_25180     <- coef_w$stock[1,1]# small
+w_int_25182     <- coef_w$stock[2,1]# small
+w_int_28141     <- coef_w$stock[4,1]# medium
+w_int_28247     <- coef_w$stock[6,1]# medium
+w_int_28196     <- coef_w$stock[5,1]# large
+w_int_25203     <- coef_w$stock[3,1]# large
+
+# Extract slopes per predictor for wing area model
+w_slope_temp     <- summary(w5)$coefficients[2, 1]
+w_slope_oxy      <- summary(w5)$coefficients[3, 1]
+w_slope_sex      <- summary(w5)$coefficients[6, 1]
+w_slope_temp_oxy <- summary(w5)$coefficients[7, 1]
+
+# Extract general and random intercepts for cell area model
+c_inter_general <- summary(c5)$coefficients[1, 1]
+c_int_25180     <- coef_c$stock[1,1]# small
+c_int_25182     <- coef_c$stock[2,1]# small
+c_int_28141     <- coef_c$stock[4,1]# medium
+c_int_28247     <- coef_c$stock[6,1]# medium
+c_int_28196     <- coef_c$stock[5,1]# large
+c_int_25203     <- coef_c$stock[3,1]# large
+
+# Extract slopes per predictor for cell area model
+c_slope_temp     <- summary(c5)$coefficients[2, 1]
+c_slope_oxy      <- summary(c5)$coefficients[3, 1]
+c_slope_sex      <- summary(c5)$coefficients[6, 1]
+c_slope_temp_oxy <- summary(c5)$coefficients[7, 1]
+
+#{
+#pdf("2.2.1. Figure 2.pdf",width = 7,height = 10,useDingbats = FALSE)
 #png("2.2.1. Figure 2.png",width = 7,height = 10,units = "in",res = 600)
 par(mfrow=c(3,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
 #-------------------------------------------------------------------------------
@@ -262,7 +308,7 @@ visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
            ylim=c(-0.4,0.1),
            xlim=c(14,28),
            cex.axis=1.2,cex.lab=1.4)
-abline(int_25180,)
+
 #update axis
 axis(1,at=c(17,25), 
      labels=c("17","25"),cex.axis=1.2)
@@ -298,6 +344,17 @@ legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
 legend("topleft", legend=c("(b)"), cex=1.4,bty="n")
+
+# add lines for each stock
+x <- c(17,25)
+y <- c(m_inter_general + m_slope_temp * x + m_slope_oxy * 21 + m_slope_sex + m_slope_temp_oxy * 21 * x)
+
+lines(x,y + m_int_25180, col='#B2ABD250',lty=2,lwd=4) #small 25180
+lines(x,y + m_int_25182, col='#B2ABD250',lty=2,lwd=4) #small 25182
+lines(x,y + m_int_28141, col='#6495ED50',lty=2,lwd=4) #small 28141
+lines(x,y + m_int_28247, col='#6495ED50',lty=2,lwd=4) #small 28247
+lines(x,y + m_int_28196, col='#B8860B50',lty=2,lwd=4) #small 28196
+lines(x,y + m_int_25203, col='#B8860B50',lty=2,lwd=4) #small 25203
 #-------------------------------------------------------------------------------
 #Wing area
 # labels
@@ -408,92 +465,14 @@ legend("bottomleft", legend=c("large", "medium","small"),
        lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
        col=c('#B8860B', '#6495ED','#B2ABD2'))
 legend("topleft", legend=c("(f)"), cex=1.4,bty="n")
-dev.off()
-}
+#dev.off()
+#}
 # ------------------------------------------------------------------------------
 # saving session information with all packages versions for reproducibility purposes
 sink("../Outputs/2.1.1. Data analyses_Table_1_and_Figure_2_R_session.txt")
 sessionInfo()
 sink()
 # ------------------------------------------------------------------------------
-m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
-coef_m<-coef(m5)
-fixed_effects_mass <- fixed.effects(m5)
-stock_id<-unique(as.factor(paste(dat$stock,dat$cell_area_cat)))
-
-stock_id
-# 25180 small  
-# 25182 small  
-# 28141 medium
-# 28247 medium
-# 28196 large
-# 25203 large    
-
-# Extract intercepts per stock
-int_25180 <- coef_m$stock[1,1] 
-int_25182 <- coef_m$stock[2,1] 
-int_25203 <- coef_m$stock[3,1] 
-int_28141 <- coef_m$stock[4,1] 
-int_28196 <- coef_m$stock[5,1] 
-int_28247 <- coef_m$stock[6,1]
-
-# Extract slopes
-int_25180 <- coef_m$stock[1,1] 
-int_25182 <- coef_m$stock[2,1] 
-int_25203 <- coef_m$stock[3,1] 
-int_28141 <- coef_m$stock[4,1] 
-int_28196 <- coef_m$stock[5,1] 
-int_28247 <- coef_m$stock[6,1]
-
-# extract intercept and slopes estimates of the best model for fresh mass 
-int                                     <- fixed.effects(m5[])   
-int                                     <- 0.3116174421
-temp                                    <- -0.0128956159
-oxy                                     <- -0.0057667027
-cell_area_catmedium                     <-  0.0931448727     
-cell_area_catsmall                      <- -0.0574583153                 
-sexmale                                 <- -0.1681601788 
-temperature:oxygen                      <-  0.0004306600                   
-temperature:cell_area_catmedium        <- -0.0083656991                        
-temperature:cell_area_catsmall          <- -0.0032143579                        
-oxygen:cell_area_catmedium              <- -0.0123560491
-temperature:oxygen:cell_area_catmedium  <- 0.0006402856
-oxygen:cell_area_catsmall               <- -0.0060958922     
-temperature:oxygen:cell_area_catsmall   <- 0.00040292
- 
-                            
- 
-
-
-# labels
-labs= c("0.4","0.6","0.8","1.0","1.2")
-xs= log10(c(0.4,0.6,0.8,1.0,1.2))
-
-#Fresh mass
-par(mai=c(0.85,0.82,0,0))
-visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
-       print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
-       points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
-       line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
-       xlab="Temperature (°C)", 
-       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
-       ylab="Fresh mass (mg)",
-       yaxt="n",
-       xaxt="n",
-       ylim=c(-0.4,0.1),
-       xlim=c(14,28),
-       cex.axis=1.2,cex.lab=1.4)
-
-#update axis
-axis(1,at=c(17,25), 
-     labels=c("17","25"),cex.axis=1.2)
-axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
-# Add a legend
-legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
-legend("bottomleft", legend=c("large", "medium","small"),
-       lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
-       col=c('#B8860B', '#6495ED','#B2ABD2'))
-legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
 ################################################################################
 ############################ END OF SCRIPT #####################################
 ################################################################################
