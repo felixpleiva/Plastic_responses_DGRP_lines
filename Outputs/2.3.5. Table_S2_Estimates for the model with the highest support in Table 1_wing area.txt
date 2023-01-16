@@ -1,0 +1,33 @@
+x
+Linear mixed model fit by REML ['lmerMod']
+Formula: wing_area_log ~ temperature * oxygen * cell_area_cat + sex +  
+    (1 | stock)
+   Data: dat
+
+REML criterion at convergence: -2178.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.7688 -0.5522  0.1180  0.6488  2.1405 
+
+Random effects:
+ Groups   Name        Variance  Std.Dev.
+ stock    (Intercept) 7.768e-05 0.008814
+ Residual             3.003e-04 0.017328
+Number of obs: 447, groups:  stock, 6
+
+Fixed effects:
+                                         Estimate Std. Error t value
+(Intercept)                             6.488e+00  2.299e-02 282.170
+temperature                            -2.052e-02  1.082e-03 -18.971
+oxygen                                 -4.842e-03  1.295e-03  -3.739
+cell_area_catmedium                    -3.064e-02  3.737e-02  -0.820
+cell_area_catsmall                     -1.724e-01  3.168e-02  -5.442
+sexmale                                -8.991e-02  1.675e-03 -53.682
+temperature:oxygen                      3.433e-04  6.301e-05   5.448
+temperature:cell_area_catmedium        -5.404e-05  1.674e-03  -0.032
+temperature:cell_area_catsmall          2.751e-03  1.477e-03   1.862
+oxygen:cell_area_catmedium             -1.466e-03  2.215e-03  -0.662
+oxygen:cell_area_catsmall              -4.551e-04  1.814e-03  -0.251
+temperature:oxygen:cell_area_catmedium  9.205e-05  1.016e-04   0.906
+temperature:oxygen:cell_area_catsmall   3.633e-05  8.784e-05   0.414

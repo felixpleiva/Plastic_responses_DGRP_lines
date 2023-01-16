@@ -5,7 +5,7 @@
 # When using the data or code from this manuscript, please cite it as:
 
 #Leiva FP, Boerrigter JGJ & Verberk WCEP. (2022). The role of cell size in
-#shaping responses to oxygen and temperature in fruit flies (1.0). Zenodo.
+#shaping responses to oxygen and temperature in fruit flies. Zenodo.
 #https://doi.org/10.5281/zenodo.5949049.
 #------------------------------------------------------------------------------
 #Cleaning working space
@@ -26,6 +26,8 @@ library(visreg)
 library(AICcmodavg)
 library(nlme)
 library(lattice)
+library(tidyr)
+library(broom)
 # ------------------------------------------------------------------------------
 # create a folder for the outputs produced by running this script (if it doesn't
 # already exist)
@@ -160,23 +162,23 @@ write.csv(fit.table.1.w,"2.3.2. Table_1_Model_comparison_for_wing_area.csv",row.
 write.csv(fit.table.1.c,"2.3.3. Table_1_Model_comparison_for_cell_area.csv",row.names = FALSE)
 
 #-------------------------------------------------------------------------------
-# Test more complex structures on the most informative model
+# Testing more complex structures on the most informative model
 #-------------------------------------------------------------------------------
 # fresh mass
-m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
+m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat,REML = FALSE)
 m5.a<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature), data=dat)
 m5.b<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|oxygen),data=dat)
-m5.c<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat)
+m5.c<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature) + (1|oxygen), data=dat,REML = FALSE)
 m5.d<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (1|temperature:oxygen),data=dat)
-m5.e<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (cell_area_cat|stock),data=dat)
+m5.e<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (cell_area_cat|stock),data=dat,REML = FALSE)
 m5.f<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock) + (cell_area_cat|stock),data=dat)
-m5.g<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1+ cell_area_cat|stock),data=dat)
+m5.g<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1+ cell_area_cat|stock),data=dat,REML = FALSE)
 
 # we see several models DO NOT converges, but two of them does (model m5.c and m5.e and m5.g).
 anova(m5.c,m5.e)
 anova(m5.c,m5.g)
 anova(m5,m5.c)
-# more complex random structures does not help to explain the variation in fresh mass
+# more complex random structures does NOT help to explain the variation in fresh mass
 
 # wing area
 w5<-lmer(wing_area_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
@@ -212,11 +214,11 @@ anova(c5,c5.f)
 
 # More complex random structures does not help to explain the variation in cell area
 #-------------------------------------------------------------------------------
-# Summary Tables of the best models
+# Summary Tables of the best models (Tables S1-S3, Supplementary information)
 #-------------------------------------------------------------------------------
 # fresh mass
 m5<-lmer(fresh_mass_log ~ temperature * oxygen * cell_area_cat +  sex + (1|stock), data=dat)
-Anova(m5,test.statistic="F")
+Anova(m5.reml,test.statistic="F")
 summary(m5)
 coef_m<-coef(m5)
 dotplot(ranef(m5,condVar=TRUE))
@@ -235,9 +237,18 @@ summary(c5)
 coef_c<-coef(c5)
 dotplot(ranef(c5,condVar=TRUE))
 
+# Table S1-S3
+Table_S1 <- capture.output(summary(m5))
+Table_S2 <- capture.output(summary(w5))
+Table_S3 <- capture.output(summary(c5))
+
+write.table(Table_S1,"2.3.4. Table_S1_Estimates for the model with the highest support in Table 1_fresh mass.txt",row.names = F,quote = F)
+write.table(Table_S2,"2.3.5. Table_S2_Estimates for the model with the highest support in Table 1_wing area.txt",row.names = F,quote = F)
+write.table(Table_S3,"2.3.6. Table_S3_Estimates for the model with the highest support in Table 1_cell_area.txt",row.names = F,quote = F)
+
 ################################################################################
 # Figure 2
-setwd("../Outputs/")#Set directory
+setwd("../Outputs/")
 
 # Extract general and random intercepts for fresh mass model
 m_inter_general <- summary(m5)$coefficients[1, 1]
@@ -320,6 +331,17 @@ legend("bottomleft", legend=c("large", "medium","small"),
        col=c('#B8860B', '#6495ED','#B2ABD2'))
 legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
 
+# add lines for each stock
+x <- c(17,25)
+y <- c(m_inter_general + m_slope_temp * x + m_slope_oxy * 10 + m_slope_sex + m_slope_temp_oxy * 10 * x)
+
+lines(x,y + m_int_25180, col='#B2ABD250',lty=2,lwd=4) #small 25180
+lines(x,y + m_int_25182, col='#B2ABD250',lty=2,lwd=4) #small 25182
+lines(x,y + m_int_28141, col='#6495ED50',lty=2,lwd=4) #small 28141
+lines(x,y + m_int_28247, col='#6495ED50',lty=2,lwd=4) #small 28247
+lines(x,y + m_int_28196, col='#B8860B50',lty=2,lwd=4) #small 28196
+lines(x,y + m_int_25203, col='#B8860B50',lty=2,lwd=4) #small 25203
+#-------------------------------------------------------------------------------
 par(mai=c(0.85,0.82,0,0))
 visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=21),
        print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
@@ -467,6 +489,7 @@ legend("bottomleft", legend=c("large", "medium","small"),
 legend("topleft", legend=c("(f)"), cex=1.4,bty="n")
 #dev.off()
 #}
+
 # ------------------------------------------------------------------------------
 # saving session information with all packages versions for reproducibility purposes
 sink("../Outputs/2.1.1. Data analyses_Table_1_and_Figure_2_R_session.txt")

@@ -5,7 +5,7 @@
 # When using the data or code from this manuscript, please cite it as:
 
 #Leiva FP, Boerrigter JGJ & Verberk WCEP. (2022). The role of cell size in
-#shaping responses to oxygen and temperature in fruit flies (1.0). Zenodo.
+#shaping responses to oxygen and temperature in fruit flies. Zenodo.
 #https://doi.org/10.5281/zenodo.5949049.
 #------------------------------------------------------------------------------
 #Cleaning working space
@@ -28,6 +28,7 @@ library(lmerTest)# P-values for mixed models
 library(visreg)# plotting regression models
 library(AICcmodavg)
 library(cowplot)
+library(scales)
 # ------------------------------------------------------------------------------
 # create a folder for the outputs produced by running this script (if it doesn't
 # already exist)
@@ -295,7 +296,9 @@ female$pred <- predict(f.lme1,re.form=NA)
 female$pred1 <- predict(f.lme1)
 f.lme1 <- ggplot(female,aes(cell_area_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
-    geom_point(colour="#4DAC2660",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
 f.lme1.plot=
     f.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
@@ -305,7 +308,10 @@ f.lme1.plot=
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     # annotate('text', x = 2.15, y = 0.225, 
     #          label = "Log[10]~FM== -1.035~+~0.481~Log[10]~CA",parse = TRUE,size=4)+
-    theme_bw()
+    theme_bw()+
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 f.lme1.plot
 
 # Fresh mass vs cell number in females
@@ -315,7 +321,9 @@ female$pred <- predict(f.lme3,re.form=NA)
 female$pred1 <- predict(f.lme3)
 f.lme3 <- ggplot(female,aes(cell_number_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
-    geom_point(colour="#4DAC2660",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
 f.lme3.plot=
     f.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
@@ -323,7 +331,10 @@ f.lme3.plot=
     ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-        theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 f.lme3.plot
 
 # Wing area vs cell size in females
@@ -333,14 +344,20 @@ female$pred <- predict(f.lme5,re.form=NA)
 female$pred1 <- predict(f.lme5)
 f.lme5 <- ggplot(female,aes(cell_area_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
-    geom_point(colour="#4DAC2660",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
+
 f.lme5.plot=
     f.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 f.lme5.plot
 
 # Wing area vs cell number in females
@@ -350,14 +367,20 @@ female$pred <- predict(f.lme7,re.form=NA)
 female$pred1 <- predict(f.lme7)
 f.lme7 <- ggplot(female,aes(cell_number_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(3.7,4))+
-    geom_point(colour="#4DAC2660",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
+
 f.lme7.plot=
     f.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10],"[cell number]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 f.lme7.plot
 # ------------------------------------------------------------------------------
 # Fresh mass vs cell size in males
@@ -367,7 +390,10 @@ male$pred <- predict(m.lme1,re.form=NA)
 male$pred1 <- predict(m.lme1)
 m.lme1 <- ggplot(male,aes(cell_area_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
-    geom_point(colour="#A6761D60",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
+
 m.lme1.plot=
     m.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
@@ -375,7 +401,10 @@ m.lme1.plot=
     ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 m.lme1.plot
 
 # Fresh mass vs cell number in males
@@ -385,7 +414,10 @@ male$pred <- predict(m.lme3,re.form=NA)
 male$pred1 <- predict(m.lme3)
 m.lme3 <- ggplot(male,aes(cell_number_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
-    geom_point(colour="#A6761D60",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
+
 m.lme3.plot=
     m.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
@@ -393,7 +425,10 @@ m.lme3.plot=
     ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 m.lme3.plot
 
 # Wing area vs cell size in males
@@ -403,14 +438,20 @@ male$pred <- predict(m.lme5,re.form=NA)
 male$pred1 <- predict(m.lme5)
 m.lme5 <- ggplot(male,aes(cell_area_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
-    geom_point(colour="#A6761D60",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
+
 m.lme5.plot=
     m.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 m.lme5.plot
 
 # Wing area vs cell number in males
@@ -420,14 +461,20 @@ male$pred <- predict(m.lme7,re.form=NA)
 male$pred1 <- predict(m.lme7)
 m.lme7 <- ggplot(male,aes(cell_number_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(3.7,4))+
-    geom_point(colour="#A6761D60",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
+
 m.lme7.plot=
     m.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10],"[cell number]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 m.lme7.plot
 
 # ------------------------------------------------------------------------------
@@ -438,7 +485,10 @@ dat$pred <- predict(p.lme1,re.form=NA)
 dat$pred1 <- predict(p.lme1)
 p.lme1 <- ggplot(dat,aes(cell_area_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
-    geom_point(colour="#55555540",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
+
 p.lme1.plot=
     p.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
@@ -446,7 +496,10 @@ p.lme1.plot=
     ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 p.lme1.plot
 
 # Fresh mass vs cell number in sex pooled
@@ -456,7 +509,10 @@ dat$pred <- predict(p.lme3,re.form=NA)
 dat$pred1 <- predict(p.lme3)
 p.lme3 <- ggplot(dat,aes(cell_number_log,fresh_mass_log))+
     ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
-    geom_point(colour="#55555540",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
+
 p.lme3.plot=
     p.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
@@ -465,7 +521,9 @@ p.lme3.plot=
     ggtitle("Females")+
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_blank())
 p.lme3.plot
 
 # Wing area vs cell size in sex pooled
@@ -475,14 +533,20 @@ dat$pred <- predict(p.lme5,re.form=NA)
 dat$pred1 <- predict(p.lme5)
 p.lme5 <- ggplot(dat,aes(cell_area_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
-    geom_point(colour="#55555540",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
+
 p.lme5.plot=
     p.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.15,0.72), 
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 p.lme5.plot
 
 # Wing area vs cell number in sex pooled
@@ -492,14 +556,19 @@ dat$pred <- predict(p.lme7,re.form=NA)
 dat$pred1 <- predict(p.lme7)
 p.lme7 <- ggplot(dat,aes(cell_number_log,wing_area_log))+
     ylim(c(5.8,6.3))+xlim(c(3.7,4))+
-    geom_point(colour="#55555540",size=2)
+    geom_point(aes(shape= stock,color = stock))+
+    scale_shape_manual(values=c(8,21:25))+
+    scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
+
 p.lme7.plot=
     p.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
     xlab(expression(paste(log[10],"[cell number]"))) + 
     ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.3), 
+          legend.background = element_blank())
 p.lme7.plot
 # ------------------------------------------------------------------------------
 setwd("../Outputs/")#Set directory
