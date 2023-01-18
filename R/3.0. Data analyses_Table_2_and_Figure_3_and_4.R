@@ -295,19 +295,21 @@ f.lme1<-lmer(fresh_mass_log~cell_area_log+ (1|stock),REML = TRUE, data=female)
 female$pred <- predict(f.lme1,re.form=NA)
 female$pred1 <- predict(f.lme1)
 f.lme1 <- ggplot(female,aes(cell_area_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
+    #ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
 f.lme1.plot=
     f.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = expression(paste("fresh mass (mg)")),
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
-    # annotate('text', x = 2.15, y = 0.225, 
-    #          label = "Log[10]~FM== -1.035~+~0.481~Log[10]~CA",parse = TRUE,size=4)+
     theme_bw()+
     theme(legend.position = c(0.15,0.72), 
           legend.background = element_rect(fill = "white"),
@@ -320,15 +322,19 @@ f.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
 female$pred <- predict(f.lme3,re.form=NA)
 female$pred1 <- predict(f.lme3)
 f.lme3 <- ggplot(female,aes(cell_number_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
+    #ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
 f.lme3.plot=
     f.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = expression(paste("fresh mass (mg)")),
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Females")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
@@ -343,7 +349,7 @@ f.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=female)
 female$pred <- predict(f.lme5,re.form=NA)
 female$pred1 <- predict(f.lme5)
 f.lme5 <- ggplot(female,aes(cell_area_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
+    #ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
@@ -351,8 +357,12 @@ f.lme5 <- ggplot(female,aes(cell_area_log,wing_area_log))+
 f.lme5.plot=
     f.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+    labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = expression(paste("fresh mass (mg)")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.15,0.72), 
@@ -366,7 +376,7 @@ f.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=female)
 female$pred <- predict(f.lme7,re.form=NA)
 female$pred1 <- predict(f.lme7)
 f.lme7 <- ggplot(female,aes(cell_number_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(3.7,4))+
+    #ylim(c(5.8,6.3))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26","#4DAC26"))
@@ -374,8 +384,12 @@ f.lme7 <- ggplot(female,aes(cell_number_log,wing_area_log))+
 f.lme7.plot=
     f.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#4DAC26",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = expression(paste("wing area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.85, 0.3), 
@@ -389,7 +403,7 @@ m.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=male)
 male$pred <- predict(m.lme1,re.form=NA)
 male$pred1 <- predict(m.lme1)
 m.lme1 <- ggplot(male,aes(cell_area_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
+    #ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
@@ -397,8 +411,12 @@ m.lme1 <- ggplot(male,aes(cell_area_log,fresh_mass_log))+
 m.lme1.plot=
     m.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = expression(paste("fresh mass (mg)")),
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
@@ -413,7 +431,7 @@ m.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
 male$pred <- predict(m.lme3,re.form=NA)
 male$pred1 <- predict(m.lme3)
 m.lme3 <- ggplot(male,aes(cell_number_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
+    #ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
@@ -421,8 +439,12 @@ m.lme3 <- ggplot(male,aes(cell_number_log,fresh_mass_log))+
 m.lme3.plot=
     m.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = expression(paste("fresh mass (mg)")),
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Males")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
@@ -437,7 +459,7 @@ m.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=male)
 male$pred <- predict(m.lme5,re.form=NA)
 male$pred1 <- predict(m.lme5)
 m.lme5 <- ggplot(male,aes(cell_area_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
+    #ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
@@ -445,8 +467,12 @@ m.lme5 <- ggplot(male,aes(cell_area_log,wing_area_log))+
 m.lme5.plot=
     m.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = expression(paste("wing area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.15,0.72), 
@@ -460,7 +486,7 @@ m.lme7<-lmer(wing_area_log~cell_number_log+ (1|stock),REML = TRUE,data=male)
 male$pred <- predict(m.lme7,re.form=NA)
 male$pred1 <- predict(m.lme7)
 m.lme7 <- ggplot(male,aes(cell_number_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(3.7,4))+
+    #ylim(c(5.8,6.3))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#A6761D","#A6761D","#A6761D","#A6761D","#A6761D","#A6761D"))
@@ -468,8 +494,12 @@ m.lme7 <- ggplot(male,aes(cell_number_log,wing_area_log))+
 m.lme7.plot=
     m.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#A6761D",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = expression(paste("wing area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.85, 0.3), 
@@ -484,7 +514,7 @@ p.lme1<-lmer(fresh_mass_log~cell_area_log + (1|stock),REML = TRUE,data=dat)
 dat$pred <- predict(p.lme1,re.form=NA)
 dat$pred1 <- predict(p.lme1)
 p.lme1 <- ggplot(dat,aes(cell_area_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
+    #ylim(c(-0.26,0.25))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
@@ -492,8 +522,12 @@ p.lme1 <- ggplot(dat,aes(cell_area_log,fresh_mass_log))+
 p.lme1.plot=
     p.lme1 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = "fresh mass (mg)",
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 40,face = "bold"))+
     theme_bw() +
@@ -508,7 +542,7 @@ p.lme3<-lmer(fresh_mass_log~cell_number_log+ (1|stock),REML = TRUE,data=dat)
 dat$pred <- predict(p.lme3,re.form=NA)
 dat$pred1 <- predict(p.lme3)
 p.lme3 <- ggplot(dat,aes(cell_number_log,fresh_mass_log))+
-    ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
+    #ylim(c(-0.26,0.25))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
@@ -516,8 +550,12 @@ p.lme3 <- ggplot(dat,aes(cell_number_log,fresh_mass_log))+
 p.lme3.plot=
     p.lme3 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10],"[fresh mass (mg)]"))) + 
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = "fresh mass (mg)",
+                       labels = scales::math_format(10^.x), lim=c(-0.26,0.25)) +
     ggtitle("Females")+
     ggtitle("Sex pooled")+
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
@@ -532,7 +570,7 @@ p.lme5<-lmer(wing_area_log~cell_area_log+ (1|stock),REML = TRUE,data=dat)
 dat$pred <- predict(p.lme5,re.form=NA)
 dat$pred1 <- predict(p.lme5)
 p.lme5 <- ggplot(dat,aes(cell_area_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
+    #ylim(c(5.8,6.3))+xlim(c(1.9,2.45))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
@@ -540,8 +578,12 @@ p.lme5 <- ggplot(dat,aes(cell_area_log,wing_area_log))+
 p.lme5.plot=
     p.lme5 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    # xlab(expression(paste(log[10], "[cell area (",mu, m^2,")]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) + 
+    scale_x_continuous(name = expression(paste("cell area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x),lim=c(1.9,2.45)) +
+    scale_y_continuous(name = expression(paste("wing area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.15,0.72), 
@@ -555,7 +597,7 @@ p.lme7<-lmer(wing_area_log~cell_number_log + (1|stock),REML = TRUE,data=dat)
 dat$pred <- predict(p.lme7,re.form=NA)
 dat$pred1 <- predict(p.lme7)
 p.lme7 <- ggplot(dat,aes(cell_number_log,wing_area_log))+
-    ylim(c(5.8,6.3))+xlim(c(3.7,4))+
+    #ylim(c(5.8,6.3))+xlim(c(3.7,4))+
     geom_point(aes(shape= stock,color = stock))+
     scale_shape_manual(values=c(8,21:25))+
     scale_color_manual(values = c("#555555","#555555","#555555","#555555","#555555","#555555"))
@@ -563,8 +605,12 @@ p.lme7 <- ggplot(dat,aes(cell_number_log,wing_area_log))+
 p.lme7.plot=
     p.lme7 +   geom_line(colour="gray",aes(y=pred1,group=stock)) +
     geom_line(colour="#555555",lwd=2,aes(y=pred,group=stock))+
-    xlab(expression(paste(log[10],"[cell number]"))) + 
-    ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    # xlab(expression(paste(log[10],"[cell number]"))) + 
+    # ylab(expression(paste(log[10], "[wing area (",mu, m^2,")]"))) +
+    scale_x_continuous(name = "cell number",
+                       labels = scales::math_format(10^.x),lim=c(3.7,4)) +
+    scale_y_continuous(name = expression(paste("wing area (",mu, m^2,")")),
+                       labels = scales::math_format(10^.x), lim=c(5.8,6.3)) +
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.85, 0.3), 
