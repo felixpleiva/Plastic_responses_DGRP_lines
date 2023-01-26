@@ -52,9 +52,16 @@ Anova(fit1)
 ################################################################################
 setwd("../Outputs/")#Set directory
 {
-pdf("4.2.1. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
-#png("4.2.1. Figure 5.png",width = 10,height = 5,units = "in",res = 600)
+#pdf("4.2.1. Figure 5.pdf",width = 10,height = 5,useDingbats = FALSE)
+png("4.2.1. Figure 5.png",width = 10,height = 5,units = "in",res = 600)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0.1))
+
+# labels for y-axis
+labs_mass = c("0.4","0.6","0.8","1.0","1.2")
+xs_mass = log10(c(0.4,0.6,0.8,1.0,1.2))
+# labels for x-axis
+labs_cell = c("80","105","135","170","220")
+xs_cell = log10(c(80,105,135,170,220))
 
 # under hypoxia
 par(mai=c(0.85,0.87,0.1,0.1))
@@ -62,10 +69,20 @@ visreg(fit1,"cell_area_log",by="temperature",cond=list(oxygen=10),overlay=TRUE,
        print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")), 
-       ylab=expression(paste(log[10],"[fresh mass (mg)]")),
-       ylim=c(-0.4,0.1),xlim=c(1.9,2.4),
+       #xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
+       xlab=expression(paste("cell area (",mu, m^2,")")),
+       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+       ylab="fresh mass (mg)",
+       yaxt="n",
+       xaxt="n",
+       ylim=c(-0.4,0.1),
+       xlim=c(1.9,2.4),
        cex.axis=1.2,cex.lab=1.4)
+
+#update axis
+axis(2, at=xs_mass, labels=labs_mass, cex.axis=1.2,las=1)
+axis(1, at=xs_cell, labels=labs_cell, cex.axis=1.2,las=1)
+
 ## Draw a polygon defining an area on the graph
 xx = c(1.8815,1.8815,2.4185,2.4185)
 yy = c(0.05,0.119,0.119,0.05)
@@ -82,10 +99,19 @@ visreg(fit1,"cell_area_log",by="temperature",cond=list(oxygen=21),overlay=TRUE,
        print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")), 
-       ylab=expression(paste(log[10],"[fresh mass (mg)]")),
-       ylim=c(-0.4,0.1),xlim=c(1.9,2.4),
+       #xlab=expression(paste(log[10], "[cell area (",mu, m^2,")]")),
+       xlab=expression(paste("cell area (",mu, m^2,")")),
+       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+       ylab="fresh mass (mg)",
+       yaxt="n",
+       xaxt="n",
+       ylim=c(-0.4,0.1),
+       xlim=c(1.9,2.4),
        cex.axis=1.2,cex.lab=1.4)
+
+#update axis
+axis(2, at=xs_mass, labels=labs_mass, cex.axis=1.2,las=1)
+axis(1, at=xs_cell, labels=labs_cell, cex.axis=1.2,las=1)
 
 ## Draw a polygon defining an area on the graph
 xx = c(1.8815,1.8815,2.4185,2.4185)

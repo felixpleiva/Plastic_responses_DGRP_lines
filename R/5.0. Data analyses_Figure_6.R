@@ -56,8 +56,8 @@ write.table(Table_S4,"5.3.1. Table_S4_Estimates of the model used to plot Figure
 # Figure 6
 ################################################################################
 {
-#pdf("5.2.1. Figure 6.pdf",width = 10,height = 5,useDingbats = FALSE)
-png("5.2.1. Figure 6.png",width = 10,height = 5,units = "in",res = 600)
+pdf("5.2.1. Figure 6.pdf",width = 10,height = 5,useDingbats = FALSE)
+#png("5.2.1. Figure 6.png",width = 10,height = 5,units = "in",res = 600)
 par(mfrow=c(1,2),tcl=-0.4, family="serif",omi=c(0,0,0,0))
 
 # under hypoxia
@@ -66,7 +66,7 @@ visreg(fit1,"cell_area_delta",by="temperature",cond=list(oxygen=10),overlay=TRUE
    print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab="Standardised cell area (%)", ylab="Standardised fresh mass (%)",
+       xlab="standardised cell area (%)", ylab="standardised fresh mass (%)",
        ylim=c(-50,50),xlim=c(-50,50),
        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
        cex.axis=1.5,cex.lab=1.5)
@@ -87,7 +87,7 @@ visreg(fit1,"cell_area_delta",by="temperature",cond=list(oxygen=21),overlay=TRUE
        print.cond=TRUE,legend = FALSE,
        points=list(col=c("#2c7fb870", "#de2d2670"),pch=16,cex=1.4),
        line=list(col=c("#2c7fb8", "#de2d26"), lwd=4),
-       xlab="Standardised cell area (%)", ylab="Standardised fresh mass (%)",
+       xlab="standardised cell area (%)", ylab="standardised fresh mass (%)",
        ylim=c(-50,50),xlim=c(-50,50),
        xaxs = "i",yaxs = "i",#force origin of our x- and y-axes
        cex.axis=1.5,cex.lab=1.5)
