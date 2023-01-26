@@ -47,10 +47,14 @@ dat2<-subset(male,dat$oxygen==21&dat$temperature==25)
 fit1<-lmer(fresh_mass_delta ~ temperature * cell_area_delta + oxygen * cell_area_delta + sex + (1|stock),REML = FALSE, data=dat)
 summary(fit1); Anova(fit1)
 
+# Table S4
+Table_S4 <- capture.output(summary(fit1))
+setwd("../Outputs/")
+write.table(Table_S4,"5.3.1. Table_S4_Estimates of the model used to plot Figure 6.txt",row.names = F,quote = F)
+
 ################################################################################
 # Figure 6
 ################################################################################
-setwd("../Outputs/")
 {
 #pdf("5.2.1. Figure 6.pdf",width = 10,height = 5,useDingbats = FALSE)
 png("5.2.1. Figure 6.png",width = 10,height = 5,units = "in",res = 600)

@@ -1,0 +1,37 @@
+x
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: fresh_mass_delta ~ temperature * cell_area_delta + oxygen * cell_area_delta +  
+    sex + (1 | stock)
+   Data: dat
+
+     AIC      BIC   logLik deviance df.resid 
+  2982.4   3019.4  -1482.2   2964.4      438 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.61754 -0.70223 -0.03591  0.67325  2.24849 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ stock    (Intercept) 21.69    4.657   
+ Residual             42.31    6.505   
+Number of obs: 447, groups:  stock, 6
+
+Fixed effects:
+                             Estimate Std. Error t value
+(Intercept)                 -3.965162   3.456685  -1.147
+temperature                 -0.828854   0.130803  -6.337
+cell_area_delta             -0.753297   0.283937  -2.653
+oxygen                       0.865635   0.078629  11.009
+sexmale                      7.588103   0.622704  12.186
+temperature:cell_area_delta  0.064335   0.011939   5.389
+cell_area_delta:oxygen      -0.028550   0.005691  -5.017
+
+Correlation of Fixed Effects:
+            (Intr) tmprtr cll_r_ oxygen sexmal tmp:__
+temperature -0.741                                   
+cell_ar_dlt -0.399  0.206                            
+oxygen      -0.121 -0.287  0.434                     
+sexmale     -0.018 -0.094  0.024 -0.005              
+tmprtr:cl__  0.321 -0.105 -0.954 -0.422 -0.040       
+cll_r_dlt:x  0.174  0.013 -0.641 -0.528  0.019  0.435
