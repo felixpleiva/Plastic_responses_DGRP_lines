@@ -252,18 +252,73 @@ setwd("../Outputs/")
 
 # Extract general and random intercepts for fresh mass model
 m_inter_general <- summary(m5)$coefficients[1, 1]
-m_int_25180     <- coef_m$stock[1,1]# small
-m_int_25182     <- coef_m$stock[2,1]# small
-m_int_28141     <- coef_m$stock[4,1]# medium
-m_int_28247     <- coef_m$stock[6,1]# medium
-m_int_28196     <- coef_m$stock[5,1]# large
-m_int_25203     <- coef_m$stock[3,1]# large
+m_int_25180     <- ranef(m5)$stock[1,1]# small
+m_int_25182     <- ranef(m5)$stock[2,1]# small
+m_int_28141     <- ranef(m5)$stock[4,1]# medium
+m_int_28247     <- ranef(m5)$stock[6,1]# medium
+m_int_28196     <- ranef(m5)$stock[5,1]# large
+m_int_25203     <- ranef(m5)$stock[3,1]# large
 
 # Extract slopes per predictor for fresh mass model
 m_slope_temp     <- summary(m5)$coefficients[2, 1]
 m_slope_oxy      <- summary(m5)$coefficients[3, 1]
 m_slope_sex      <- summary(m5)$coefficients[6, 1]
 m_slope_temp_oxy <- summary(m5)$coefficients[7, 1]
+
+#-------------------------------------------------------------------------------
+# TESTS ON 20230127
+
+# labels
+labs= c("0.4","0.6","0.8","1.0","1.2")
+xs= log10(c(0.4,0.6,0.8,1.0,1.2))
+
+visreg(m5,'temperature', by='cell_area_cat',cond = list(oxygen=10),
+       print.cond=TRUE,overlay=TRUE,jitter=0.1,legend = FALSE,
+       points=list(col=c('#B8860B70', '#6495ED70','#B2ABD270'),cex=1.5,pch=16),
+       line=list(col=c('#B8860B', '#6495ED','#B2ABD2'),lwd=4),
+       xlab="Temperature (°C)", 
+       #ylab=expression(paste(log[10],"[fresh mass (mg)]")),
+       ylab="Fresh mass (mg)",
+       yaxt="n",
+       xaxt="n",
+       ylim=c(-0.4,0.1),
+       xlim=c(14,28),
+       cex.axis=1.2,cex.lab=1.4)
+#update axis
+axis(1,at=c(17,25),
+     labels=c("17","25"),cex.axis=1.2)
+axis(2, at=xs, labels=labs, cex.axis=1.2,las=1)
+# Add a legend
+legend("top", legend=c("Hypoxia (10 kPa)"), cex=1.4,bty="n")
+legend("bottomleft", legend=c("large", "medium","small"),
+       lty = c(1,1,1),lwd=3,bty="n",cex=1.2, 
+       col=c('#B8860B', '#6495ED','#B2ABD2'))
+legend("topleft", legend=c("(a)"), cex=1.4,bty="n")
+
+# add lines for each stock
+x <- c(17,25)
+y <- c(m_inter_general + m_slope_temp * x + m_slope_oxy * 10 + m_slope_sex + m_slope_temp_oxy * 10 * x)
+lines(x,10^y,col="black")
+# lines(x,10^(y + m_int_25180), col='#B2ABD250',lty=2,lwd=4) #small 25180
+# lines(x,y + m_int_25182, col='#B2ABD250',lty=2,lwd=4) #small 25182
+# lines(x,y + m_int_28141, col='#6495ED50',lty=2,lwd=4) #small 28141
+# lines(x,y + m_int_28247, col='#6495ED50',lty=2,lwd=4) #small 28247
+lines(x,10^(y + m_int_28196), col="black",lty=2,lwd=4) #small 28196
+lines(x,10^(y + m_int_25203), col='#B8860B50',lty=2,lwd=4) #small 25203
+
+lines(x,(10^y),col="black")
+
+
+#-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
 
 # Extract general and random intercepts for wing area model

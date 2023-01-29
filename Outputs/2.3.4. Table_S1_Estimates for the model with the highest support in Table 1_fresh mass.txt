@@ -1,7 +1,6 @@
 x
 Linear mixed model fit by REML ['lmerMod']
-Formula: fresh_mass_log ~ temperature * oxygen * cell_area_cat + sex +  
-    (1 | stock)
+Formula: fresh_mass_log ~ temperature * oxygen * cell_area_cat + sex +      (1 | stock)
    Data: dat
 
 REML criterion at convergence: -1727
