@@ -4,9 +4,9 @@
 # ------------------------------------------------------------------------------
 # When using the data or code from this manuscript, please cite it as:
 
-#Leiva FP, Boerrigter JGJ & Verberk WCEP. (2022). The role of cell size in
+#Leiva FP, Boerrigter JGJ & Verberk WCEP. (2023). The role of cell size in
 #shaping responses to oxygen and temperature in fruit flies. Zenodo.
-#https://doi.org/10.5281/zenodo.5949049.
+#https://doi.org/10.5281/zenodo.5949048.
 #------------------------------------------------------------------------------
 #Cleaning working space
 rm(list=ls())
