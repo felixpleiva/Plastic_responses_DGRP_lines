@@ -4,7 +4,7 @@ This repository contains code and data needed to reproduce the manuscript: Leiva
 
 ## Cite the repository as: 
 
-Leiva FP, Boerrigter JGJ & Verberk WCEP. (2022). Draft version of paper data and code of manuscript: The role of cell size in shaping responses to oxygen and temperature in fruit flies (1.0). Zenodo. https://doi.org/10.5281/zenodo.5949048.
+Leiva FP, Boerrigter JGJ & Verberk WCEP. (2023). The role of cell size in shaping responses to oxygen and temperature in fruit flies. Zenodo. https://doi.org/10.5281/zenodo.5949048.
 
 
 ## Notes:
