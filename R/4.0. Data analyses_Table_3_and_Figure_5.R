@@ -44,9 +44,30 @@ dat$sex<-as.factor(dat$sex)
 dat$ID_fly<-as.factor(dat$ID_fly)
 
 #model
-fit1<-lmer(fresh_mass_log ~ temperature * cell_area_log + oxygen * cell_area_log + sex + (1|stock),REML = FALSE, data=dat)
+fit1<-lmer(fresh_mass_log ~ temperature * cell_area_log + oxygen * cell_area_log + sex + (1|stock),REML = TRUE, data=dat)
 summary(fit1)
+
+# Fixed effects:
+#                        Estimate Std. Error t value
+# (Intercept)               -0.922156   0.342771  -2.690
+# temperature               -0.032520   0.012895  -2.522
+# cell_area_log              0.424838   0.153571   2.766
+# oxygen                     0.056222   0.007939   7.082
+# sexmale                   -0.145913   0.004645 -31.413
+# temperature:cell_area_log  0.014117   0.005848   2.414
+# cell_area_log:oxygen      -0.024029   0.003598  -6.678
+#
 Anova(fit1)
+# Response: fresh_mass_log
+#                               Chisq Df Pr(>Chisq)    
+# temperature                 5.4334  1    0.01976 *  
+# cell_area_log              56.8101  1  4.800e-14 ***
+# oxygen                    110.5958  1  < 2.2e-16 ***
+# sex                       986.7997  1  < 2.2e-16 ***
+# temperature:cell_area_log   5.8273  1    0.01578 *  
+# cell_area_log:oxygen       44.5903  1  2.429e-11 ***
+# ---
+# Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ################################################################################
 # Figure 5
 ################################################################################
