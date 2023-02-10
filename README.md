@@ -1,6 +1,6 @@
 # The role of cell size in shaping responses to oxygen and temperature in fruit flies
  
-This repository contains code and data needed to reproduce the manuscript: Leiva FP, Boerrigter JGJ, Verberk WCEP. The role of cell size in shaping responses to oxygen and temperature in fruit flies. 
+This repository contains code and data needed to reproduce the manuscript: Leiva FP, Boerrigter JGJ, Verberk WCEP. 2023. The role of cell size in shaping responses to oxygen and temperature in fruit flies. Functional Ecology. https://doi.org/10.1111/1365-2435.14294
 
 ## Cite the repository as: 
 
