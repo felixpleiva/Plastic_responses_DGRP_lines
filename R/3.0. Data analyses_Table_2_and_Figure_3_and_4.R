@@ -561,7 +561,8 @@ p.lme3.plot=
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.85, 0.3), 
-          legend.background = element_blank())
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 p.lme3.plot
 
 # Wing area vs cell size in sex pooled
@@ -614,7 +615,8 @@ p.lme7.plot=
     theme(plot.title = element_text(hjust = 0.5,size = 20,face = "bold"))+
     theme_bw() +
     theme(legend.position = c(0.85, 0.3), 
-          legend.background = element_blank())
+          legend.background = element_rect(fill = "white"),
+          legend.title = element_blank())
 p.lme7.plot
 # ------------------------------------------------------------------------------
 setwd("../Outputs/")#Set directory
